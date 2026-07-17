@@ -57,7 +57,13 @@ function runAddition() {
   let n2raw = document.getElementById("add_n2").value.trim().replace(",", ".");
 
   if (n1raw == "" || n2raw == "") {
-    alert("الرجاء إدخل عددين");
+    alert("الرجاء إدخال عددين");
+    return;
+  }
+
+  // فحص حظر الحروف: إذا كان المدخل يحتوي على حروف
+  if (isNaN(n1raw) || isNaN(n2raw)) {
+    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
     return;
   }
 
@@ -151,6 +157,12 @@ function runSubtraction() {
     return;
   }
 
+  // فحص حظر الحروف
+  if (isNaN(n1raw) || isNaN(n2raw)) {
+    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
+    return;
+  }
+
   n1raw = n1raw.replace(/[^0-9.]/g, "");
   n2raw = n2raw.replace(/[^0-9.]/g, "");
 
@@ -175,8 +187,8 @@ function runSubtraction() {
   let longueur = digits1.length;
 
   let resultats = [];
-  let retenuesHaut = new Array(longueur).fill(""); // للاستعارة فوق العدد الأول
-  let retenuesBas = new Array(longueur).fill(""); // للإرجاع تحت العدد الثاني
+  let retenuesHaut = new Array(longueur).fill("");
+  let retenuesBas = new Array(longueur).fill("");
   let borrow = 0;
 
   for (let i = longueur - 1; i >= 0; i--) {
@@ -239,6 +251,12 @@ function runMultiplication() {
 
   if (n1raw == "" || n2raw == "") {
     alert("الرجاء إدخال رقمين");
+    return;
+  }
+
+  // فحص حظر الحروف
+  if (isNaN(n1raw) || isNaN(n2raw)) {
+    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
     return;
   }
 
@@ -402,6 +420,17 @@ function runDivision() {
     return;
   }
 
+  // فحص حظر الحروف
+  if (isNaN(n1raw) || isNaN(n2raw)) {
+    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
+    return;
+  }
+
+  if (parseFloat(n2raw) === 0) {
+    alert("لا يمكن القسمة على الصفر!");
+    return;
+  }
+
   let decDiviseur = n2raw.includes(".") ? n2raw.split(".")[1].length : 0;
   let factor = Math.pow(10, decDiviseur);
   let diviseurNum = Math.round(parseFloat(n2raw) * factor);
@@ -491,6 +520,7 @@ function runDivision() {
       ligneDividende[i + 1] = "";
     }
     if (i === indexVirguleInitiale - 1 && partieDecimale.length > 0) {
+      virvuleAfficheIdx = i + 1; // Correction faute de frappe locale
       virguleAfficheIdx = i + 1;
     }
   }
@@ -506,7 +536,7 @@ function runDivision() {
     let startProd = alignementDroit - etape.produitSoustrait.length + 1;
 
     for (let k = 0; k < etape.produitSoustrait.length; k++) {
-      nodeProd = ligneProd[startProd + k] = etape.produitSoustrait[k];
+      ligneProd[startProd + k] = etape.produitSoustrait[k];
     }
     ligneProd[startProd - 1] = "-";
 
@@ -639,6 +669,12 @@ function runTimeCalcul() {
   const t1Str = document.getElementById("time1").value;
   const op = document.getElementById("time_operator").value;
   const t2Str = document.getElementById("time2").value;
+
+  // فحص حظر الحروف المكتوبة في خانة الوقت (عدا علامة النقطتين المتعامدتين)
+  if (/[^\d:]/.test(t1Str) || (op !== "*" && /[^\d:]/.test(t2Str)) || (op === "*" && /\D/.test(t2Str))) {
+    alert("الرجاء إدخال صيغة وقت أو أرقام صالحة فقط وليس حروفاً!");
+    return;
+  }
 
   const t1 = parseTimeToMinutes(t1Str);
   if (!t1) {
