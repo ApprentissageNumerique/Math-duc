@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الحاسبة التعليمية الشاملة</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="math-animation-container">
+  <!-- رمز الجمع -->
+  <svg class="floating-sign plus" viewBox="0 0 100 100">
+    <path d="M 50 20 L 50 80 M 20 50 L 80 50" />
+  </svg>
+  
+  <!-- رمز الطرح -->
+  <svg class="floating-sign minus" viewBox="0 0 100 100">
+    <path d="M 20 50 L 80 50" />
+  </svg>
+  
+  <!-- رمز الضرب -->
+  <svg class="floating-sign multiply" viewBox="0 0 100 100">
+    <path d="M 25 25 L 75 75 M 75 25 L 25 75" />
+  </svg>
+  
+  <!-- رمز القسمة -->
+  <svg class="floating-sign divide" viewBox="0 0 100 100">
+    <path d="M 20 50 L 80 50" />
+    <circle cx="50" cy="25" r="8" />
+    <circle cx="50" cy="75" r="8" />
+  </svg>
+  <!-- رمز الوقت والزمن (الساعة) -->
+<svg class="floating-sign time-icon" viewBox="0 0 100 100">
+  <!-- الدائرة الخارجية للميناء -->
+  <circle cx="50" cy="50" r="35" />
+  <!-- عقارب الساعة -->
+  <path d="M 50 50 L 50 30 M 50 50 L 68 50" />
+</svg>
+<svg class="floating-sign time-icon2" viewBox="0 0 100 100">
+  <!-- الدائرة الخارجية للميناء -->
+  <circle cx="50" cy="50" r="35" />
+  <!-- عقارب الساعة -->
+  <path d="M 50 50 L 50 30 M 50 50 L 68 50" />
+</svg>
+  <!-- رمز التساوي -->
+  <svg class="floating-sign equals" viewBox="0 0 100 100">
+    <path d="M 20 40 L 80 40 M 20 60 L 80 60" />
+  </svg>
+</div>
+    <div class="container">
+      <div class="header">
+        <h1>منصة العمليات الحسابية التفاعلية</h1>
+        <p>اختر العملية الحسابية التي تريد تطبيقها والتعلم منها خطوة بخطوة</p>
+      </div>
+
+      <!-- التبويبات العلوية المحدثة -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="addition">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" fill="#e3f2fd" />
+            <path
+              d="M32 16V48M16 32H48"
+              stroke="#2196f3"
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+          </svg>
+          الجمع العمودي
+        </button>
+
+        <button class="tab-btn" data-tab="subtraction">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" fill="#ffebee" />
+            <path
+              d="M16 32H48"
+              stroke="#e91e63"
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+          </svg>
+          الطرح العمودي
+        </button>
+
+        <button class="tab-btn" data-tab="multiplication">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" fill="#e0f2f1" />
+            <path
+              d="M20 20L44 44M44 20L20 44"
+              stroke="#00bfa5"
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+          </svg>
+          الضرب العمودي
+        </button>
+
+        <button class="tab-btn" data-tab="division">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" fill="#fff3e0" />
+            <path
+              d="M16 32H48"
+              stroke="#ff9100"
+              stroke-width="6"
+              stroke-linecap="round"
+            />
+            <circle cx="32" cy="18" r="5" fill="#ff9100" />
+            <circle cx="32" cy="46" r="5" fill="#ff9100" />
+          </svg>
+          القسمة العشرية
+        </button>
+
+        <button class="tab-btn" data-tab="time">
+          <svg
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" fill="#f3e5f5" />
+            <circle cx="32" cy="32" r="24" stroke="#9c27b0" stroke-width="4" />
+            <path
+              d="M32 16V34H44"
+              stroke="#9c27b0"
+              stroke-width="4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          حساب الوقت
+        </button>
+      </div>
+
+      <!-- ================= قسم الجمع العمودي ================= -->
+      <div class="tab-content active" id="addition">
+        <div class="explication" style="border-right-color: var(--add-color)">
+          <strong>طريقة الجمع:</strong> رتب الأعداد عمودياً بحيث تكون الفواصل
+          تحت بعضها والآحاد تحت الآحاد، ثم اجمع من اليمين إلى اليسار مع ترحيل
+          الاحتفاظ الفائض للخانة التالية.
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>العدد الأول</label>
+            <input
+              type="text"
+              id="add_n1"
+              placeholder="مثال: 12,5"
+              value="12,5"
+            />
+          </div>
+          <div class="input-group">
+            <label>العدد الثاني</label>
+            <input
+              type="text"
+              id="add_n2"
+              placeholder="مثال: 3,75"
+              value="3,75"
+            />
+          </div>
+        </div>
+        <button class="btn-calc btn-add" onclick="runAddition()">
+          احسب المجموع
+        </button>
+
+        <div class="result-section" id="add_result_section">
+          <div class="final-output" id="add_operation"></div>
+          <div class="calc-table-wrapper">
+            <table>
+              <tbody id="add_table_body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= قسم الطرح العمودي (المضاف) ================= -->
+      <div class="tab-content" id="subtraction">
+        <div class="explication" style="border-right-color: var(--sub-color)">
+          <strong>طريقة الطرح:</strong> رتب الأعداد عمودياً (الفواصل فوق بعضها).
+          إذا كان الرقم العلوي أصغر من السفلي، نستعير "1" من الخانة التالية جهة
+          اليسار ونضيف "10" للخانة الحالية.
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>العدد الأول (الأكبر)</label>
+            <input
+              type="text"
+              id="sub_n1"
+              placeholder="مثال: 15,2"
+              value="15,2"
+            />
+          </div>
+          <div class="input-group">
+            <label>العدد الثاني (الأصغر)</label>
+            <input
+              type="text"
+              id="sub_n2"
+              placeholder="مثال: 6,75"
+              value="6,75"
+            />
+          </div>
+        </div>
+        <button class="btn-calc btn-sub" onclick="runSubtraction()">
+          احسب الفرق
+        </button>
+
+        <div class="result-section" id="sub_result_section">
+          <div class="final-output" id="sub_operation"></div>
+          <div class="calc-table-wrapper">
+            <table>
+              <tbody id="sub_table_body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= قسم الضرب العمودي ================= -->
+      <div class="tab-content" id="multiplication">
+        <div class="explication" style="border-right-color: var(--mul-color)">
+          <strong>طريقة الضرب:</strong> أنجز عملية الضرب دون اعتبار للفاصلة، ثم
+          في الناتج النهائي ضع الفاصلة بحيث يكون عدد أرقامها مساوياً لمجموع عدد
+          الأرقام بعد الفاصلة في العددين المضروبين.
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>المضروب</label>
+            <input
+              type="text"
+              id="mul_n1"
+              placeholder="مثال: 153,2"
+              value="153,2"
+            />
+          </div>
+          <div class="input-group">
+            <label>المضروب فيه</label>
+            <input
+              type="text"
+              id="mul_n2"
+              placeholder="مثال: 1,2"
+              value="1,2"
+            />
+          </div>
+        </div>
+        <button class="btn-calc btn-mul" onclick="runMultiplication()">
+          احسب حاصل الضرب
+        </button>
+
+        <div class="result-section" id="mul_result_section">
+          <div class="final-output" id="mul_operation"></div>
+          <div class="calc-table-wrapper">
+            <table>
+              <tbody id="mul_table_body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= قسم القسمة العشرية ================= -->
+      <div class="tab-content" id="division">
+        <div class="explication" style="border-right-color: var(--div-color)">
+          <strong>طريقة القسمة:</strong> إذا كان المقسوم عليه عشرياً، نضربه
+          والمقسوم معاً في (10، 100، أو 1000...) للتخلص من الفاصلة في المقسوم
+          عليه أولاً، ثم ننجز عملية القسمة بالشبكة كالمعتاد.
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>المقسوم</label>
+            <input
+              type="text"
+              id="div_n1"
+              placeholder="مثال: 12,25"
+              value="12,25"
+            />
+          </div>
+          <div class="input-group">
+            <label>المقسوم عليه</label>
+            <input
+              type="text"
+              id="div_n2"
+              placeholder="مثال: 2,5"
+              value="2,5"
+            />
+          </div>
+        </div>
+        <button class="btn-calc btn-div" onclick="runDivision()">
+          احسب عملية القسمة
+        </button>
+
+        <div class="result-section" id="div_result_section">
+          <div
+            class="final-output"
+            id="div_operation"
+            style="direction: ltr"
+          ></div>
+          <div class="potence-container" id="div_potence"></div>
+        </div>
+      </div>
+
+      <!-- ================= قسم حساب الوقت والزمن ================= -->
+      <div class="tab-content" id="time">
+        <div class="explication" style="border-right-color: var(--time-color)">
+          <strong>طريقة حساب الزمن:</strong> نجمع أو نطرح الساعات تحت الساعات
+          والدقائق تحت الدقائق بشكل عمودي مستقل، مع مراعاة التحويل عند الضرورة
+          (1 ساعة = 60 دقيقة).
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>الوقت الأول (ساعة:دقيقة)</label>
+            <input type="text" id="time1" placeholder="09:40" value="09:40" />
+          </div>
+          <div class="input-group" style="max-width: 110px">
+            <label>العملية</label>
+            <select id="time_operator" onchange="toggleTimeInputs()">
+              <option value="+">+</option>
+              <option value="-">-</option>
+              <option value="*">×</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label id="labelTime2">الوقت الثاني (ساعة:دقيقة)</label>
+            <input type="text" id="time2" placeholder="01:45" value="01:45" />
+          </div>
+        </div>
+        <button class="btn-calc btn-time" onclick="runTimeCalcul()">
+          احسب ناتج الوقت
+        </button>
+
+        <div class="result-section" id="time_result_section">
+          <div class="calc-table-wrapper" id="time_zone_calcul"></div>
+          <div
+            class="final-output"
+            id="time_final"
+            style="color: var(--time-color)"
+          ></div>
+          <div class="steps" id="time_steps"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
