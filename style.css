@@ -30,6 +30,38 @@ body {
 }
 
 /* ==========================================================
+   1bis. SÉLECTEUR DE LANGUE (toujours à droite de l'écran)
+   ========================================================== */
+.language-selector {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: 10px;
+  left: auto;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.language-selector label {
+  font-size: 15px;
+}
+
+.language-selector select {
+  width: auto;
+  padding: 4px 8px;
+  font-size: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+/* ==========================================================
    2. INTERFACE & CONTENEUR PRINCIPAL
    ========================================================== */
 .container {
