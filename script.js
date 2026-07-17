@@ -1,812 +1,1805 @@
-// --- 1. إدارة التنقل بين التبويبات (Tabs Layout) ---
-const tabButtons = document.querySelectorAll(".tab-btn");
-const tabContents = document.querySelectorAll(".tab-content");
+// ======================================================
+// CALCULATRICE INTERACTIVE
+// Langues : العربية | Français | English | Български
+// ======================================================
 
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach((btn) => btn.classList.remove("active"));
-    tabContents.forEach((content) => content.classList.remove("active"));
 
-    button.classList.add("active");
-    const tabId = button.getAttribute("data-tab");
-    document.getElementById(tabId).classList.add("active");
-  });
+// ======================================================
+// 1. TRADUCTIONS
+// ======================================================
+
+const translations = {
+
+    ar: {
+        errLetters: "الرجاء إدخال أرقام صالحة فقط وليس حروفاً!",
+        errEmpty: "الرجاء إدخال عددين.",
+        errZero: "لا يمكن القسمة على الصفر!",
+        errSub: "يرجى إدخال العدد الأكبر أولاً لضمان بقاء النتيجة موجبة.",
+        errTime: "الرجاء إدخال وقت أو أرقام صالحة فقط وليس حروفاً!",
+        errTimeOrder: "يجب أن يكون الوقت الأول أكبر من الوقت الثاني في عملية الطرح!",
+        errTimeFormat: "الرجاء إدخال الوقت الأول بشكل صحيح (HH:MM).",
+        errMultiplier: "الرجاء إدخال عدد صحيح موجب للمضاعفة (مثال: 3).",
+
+        afterShift: "العملية بعد إزاحة الفاصلة:",
+        finalRes: "النتيجة النهائية:",
+        theoSteps: "مراحل الحساب النظري:",
+
+        stepAddMin: "1. نجمع الدقائق:",
+        stepAddH: "2. نجمع الساعات:",
+        stepConvert: "3. نحول الدقائق الزائدة إلى ساعات:",
+
+        stepSubBorrow: "1. بما أن الدقائق الأولى أصغر، نستعير ساعة واحدة (60 دقيقة) من الساعات.",
+        stepSubNew: "2. تصبح القيم الجديدة:",
+        stepSubMin: "3. نطرح الدقائق:",
+        stepSubH: "4. نطرح الساعات:",
+
+        stepMulMin: "1. نضرب الدقائق:",
+        stepMulH: "2. نضرب الساعات:",
+        stepMulConvert: "3. نحول الدقائق الزائدة إلى ساعات:",
+
+        hUnit: "س",
+        mUnit: "د",
+        converted: "بعد التحويل",
+
+        pageH1: "منصة العمليات الحسابية التفاعلية",
+        pageSubtitle: "اختر العملية الحسابية التي تريد تطبيقها والتعلم منها خطوة بخطوة",
+
+        tabAdd: "الجمع",
+        tabSub: "الطرح",
+        tabMul: "الضرب",
+        tabDiv: "القسمة",
+        tabTime: "حساب الوقت",
+
+        explAddStrong: "طريقة الجمع:",
+        explAddText: " رتب الأعداد عمودياً بحيث تكون الفواصل تحت بعضها والآحاد تحت الآحاد، ثم اجمع من اليمين إلى اليسار مع ترحيل الاحتفاظ الفائض للخانة التالية.",
+
+        explSubStrong: "طريقة الطرح:",
+        explSubText: " رتب الأعداد عمودياً (الفواصل فوق بعضها). إذا كان الرقم العلوي أصغر من السفلي، نستعير \"1\" من الخانة التالية جهة اليسار ونضيف \"10\" للخانة الحالية.",
+
+        explMulStrong: "طريقة الضرب:",
+        explMulText: " أنجز عملية الضرب دون اعتبار للفاصلة، ثم في الناتج النهائي ضع الفاصلة بحيث يكون عدد أرقامها مساوياً لمجموع عدد الأرقام بعد الفاصلة في العددين المضروبين.",
+
+        explDivStrong: "طريقة القسمة:",
+        explDivText: " إذا كان المقسوم عليه عشرياً، نضربه والمقسوم معاً في (10، 100، أو 1000...) للتخلص من الفاصلة في المقسوم عليه أولاً، ثم ننجز عملية القسمة بالشبكة كالمعتاد.",
+
+        explTimeStrong: "طريقة حساب الزمن:",
+        explTimeText: " نجمع أو نطرح الساعات تحت الساعات والدقائق تحت الدقائق بشكل عمودي مستقل، مع مراعاة التحويل عند الضرورة (1 ساعة = 60 دقيقة).",
+
+        labelAddN1: "العدد الأول",
+        labelAddN2: "العدد الثاني",
+        labelSubN1: "العدد الأول (الأكبر)",
+        labelSubN2: "العدد الثاني (الأصغر)",
+        labelMulN1: "المضروب",
+        labelMulN2: "المضروب فيه",
+        labelDivN1: "المقسوم",
+        labelDivN2: "المقسوم عليه",
+        labelTime1: "الوقت الأول (ساعة:دقيقة)",
+        labelTime2: "الوقت الثاني (ساعة:دقيقة)",
+        labelOperator: "العملية",
+
+        btnAdd: "احسب المجموع",
+        btnSub: "احسب الفرق",
+        btnMul: "احسب حاصل الضرب",
+        btnDiv: "احسب عملية القسمة",
+        btnTime: "احسب ناتج الوقت",
+
+        phAddN1: "مثال: 12,5",
+        phAddN2: "مثال: 3,75",
+        phSubN1: "مثال: 15,2",
+        phSubN2: "مثال: 6,75",
+        phMulN1: "مثال: 153,2",
+        phMulN2: "مثال: 1,2",
+        phDivN1: "مثال: 12,25",
+        phDivN2: "مثال: 2,5"
+    },
+
+
+    fr: {
+        errLetters: "Veuillez saisir uniquement des nombres valides, pas des lettres !",
+        errEmpty: "Veuillez saisir deux nombres.",
+        errZero: "Impossible de diviser par zéro !",
+        errSub: "Veuillez saisir le plus grand nombre en premier afin que le résultat reste positif.",
+        errTime: "Veuillez saisir un format de temps ou des nombres valides, pas de lettres !",
+        errTimeOrder: "Le premier temps doit être supérieur au second pour la soustraction !",
+        errTimeFormat: "Veuillez saisir correctement le premier temps (HH:MM).",
+        errMultiplier: "Veuillez saisir un nombre entier positif pour le multiplicateur (ex. : 3).",
+
+        afterShift: "Opération après déplacement de la virgule :",
+        finalRes: "Résultat final :",
+        theoSteps: "Étapes du calcul théorique :",
+
+        stepAddMin: "1. On additionne les minutes :",
+        stepAddH: "2. On additionne les heures :",
+        stepConvert: "3. On convertit les minutes supplémentaires en heures :",
+
+        stepSubBorrow: "1. Les premières minutes étant plus petites, on emprunte 1 heure (60 minutes) aux heures.",
+        stepSubNew: "2. Les nouvelles valeurs sont :",
+        stepSubMin: "3. On soustrait les minutes :",
+        stepSubH: "4. On soustrait les heures :",
+
+        stepMulMin: "1. On multiplie les minutes :",
+        stepMulH: "2. On multiplie les heures :",
+        stepMulConvert: "3. On convertit les minutes supplémentaires en heures :",
+
+        hUnit: "h",
+        mUnit: "min",
+        converted: "Après conversion",
+
+        pageH1: "Plateforme interactive des opérations de calcul",
+        pageSubtitle: "Choisissez l'opération que vous voulez pratiquer et apprendre étape par étape",
+
+        tabAdd: "Addition",
+        tabSub: "Soustraction",
+        tabMul: "Multiplication",
+        tabDiv: "Division",
+        tabTime: "Calcul du temps",
+
+        explAddStrong: "Méthode de l'addition :",
+        explAddText: " Alignez les nombres verticalement de sorte que les virgules soient les unes sous les autres et les unités sous les unités, puis additionnez de droite à gauche en reportant la retenue à la colonne suivante.",
+
+        explSubStrong: "Méthode de la soustraction :",
+        explSubText: " Alignez les nombres verticalement (virgules alignées). Si le chiffre du haut est plus petit que celui du bas, on emprunte \"1\" à la colonne suivante à gauche et on ajoute \"10\" à la colonne actuelle.",
+
+        explMulStrong: "Méthode de la multiplication :",
+        explMulText: " Effectuez la multiplication sans tenir compte de la virgule, puis dans le résultat final, placez la virgule de sorte que le nombre de chiffres après celle-ci soit égal à la somme des chiffres après la virgule dans les deux nombres multipliés.",
+
+        explDivStrong: "Méthode de la division :",
+        explDivText: " Si le diviseur est décimal, multipliez-le ainsi que le dividende par (10, 100 ou 1000...) pour éliminer d'abord la virgule du diviseur, puis effectuez la division en potence comme d'habitude.",
+
+        explTimeStrong: "Méthode du calcul du temps :",
+        explTimeText: " On additionne ou on soustrait les heures sous les heures et les minutes sous les minutes de façon indépendante et verticale, en tenant compte de la conversion si nécessaire (1 heure = 60 minutes).",
+
+        labelAddN1: "Premier nombre",
+        labelAddN2: "Deuxième nombre",
+        labelSubN1: "Premier nombre (le plus grand)",
+        labelSubN2: "Deuxième nombre (le plus petit)",
+        labelMulN1: "Multiplicande",
+        labelMulN2: "Multiplicateur",
+        labelDivN1: "Dividende",
+        labelDivN2: "Diviseur",
+        labelTime1: "Premier temps (heure:minute)",
+        labelTime2: "Deuxième temps (heure:minute)",
+        labelOperator: "Opération",
+
+        btnAdd: "Calculer la somme",
+        btnSub: "Calculer la différence",
+        btnMul: "Calculer le produit",
+        btnDiv: "Calculer la division",
+        btnTime: "Calculer le résultat du temps",
+
+        phAddN1: "ex. : 12,5",
+        phAddN2: "ex. : 3,75",
+        phSubN1: "ex. : 15,2",
+        phSubN2: "ex. : 6,75",
+        phMulN1: "ex. : 153,2",
+        phMulN2: "ex. : 1,2",
+        phDivN1: "ex. : 12,25",
+        phDivN2: "ex. : 2,5"
+    },
+
+
+    en: {
+        errLetters: "Please enter valid numbers only, not letters!",
+        errEmpty: "Please enter two numbers.",
+        errZero: "Cannot divide by zero!",
+        errSub: "Please enter the larger number first to keep the result positive.",
+        errTime: "Please enter a valid time format or numbers only, not letters!",
+        errTimeOrder: "The first time must be greater than the second time for subtraction!",
+        errTimeFormat: "Please enter the first time correctly (HH:MM).",
+        errMultiplier: "Please enter a positive whole number for the multiplier (e.g. 3).",
+
+        afterShift: "Operation after moving the decimal point:",
+        finalRes: "Final Result:",
+        theoSteps: "Theoretical calculation steps:",
+
+        stepAddMin: "1. Add the minutes:",
+        stepAddH: "2. Add the hours:",
+        stepConvert: "3. Convert extra minutes into hours:",
+
+        stepSubBorrow: "1. Since the first minutes are smaller, we borrow 1 hour (60 minutes) from the hours.",
+        stepSubNew: "2. The new values are:",
+        stepSubMin: "3. Subtract the minutes:",
+        stepSubH: "4. Subtract the hours:",
+
+        stepMulMin: "1. Multiply the minutes:",
+        stepMulH: "2. Multiply the hours:",
+        stepMulConvert: "3. Convert extra minutes into hours:",
+
+        hUnit: "h",
+        mUnit: "min",
+        converted: "After conversion",
+
+        pageH1: "Interactive Arithmetic Operations Platform",
+        pageSubtitle: "Choose the arithmetic operation you want to practice and learn step by step",
+
+        tabAdd: "Addition",
+        tabSub: "Subtraction",
+        tabMul: "Multiplication",
+        tabDiv: "Division",
+        tabTime: "Time Calculation",
+
+        explAddStrong: "Addition method:",
+        explAddText: " Line up the numbers vertically so the decimal points and units are aligned, then add from right to left, carrying any extra to the next column.",
+
+        explSubStrong: "Subtraction method:",
+        explSubText: " Line up the numbers vertically (decimal points aligned). If the top digit is smaller than the bottom one, borrow \"1\" from the next column to the left and add \"10\" to the current column.",
+
+        explMulStrong: "Multiplication method:",
+        explMulText: " Perform the multiplication ignoring the decimal point, then in the final result place the decimal point so that the number of digits after it equals the total number of decimal digits in both numbers multiplied.",
+
+        explDivStrong: "Division method:",
+        explDivText: " If the divisor is decimal, multiply both it and the dividend by (10, 100, or 1000...) to remove the decimal point from the divisor first, then perform the long division as usual.",
+
+        explTimeStrong: "Time calculation method:",
+        explTimeText: " Add or subtract hours under hours and minutes under minutes independently in a column, converting when necessary (1 hour = 60 minutes).",
+
+        labelAddN1: "First number",
+        labelAddN2: "Second number",
+        labelSubN1: "First number (larger)",
+        labelSubN2: "Second number (smaller)",
+        labelMulN1: "Multiplicand",
+        labelMulN2: "Multiplier",
+        labelDivN1: "Dividend",
+        labelDivN2: "Divisor",
+        labelTime1: "First time (hour:minute)",
+        labelTime2: "Second time (hour:minute)",
+        labelOperator: "Operation",
+
+        btnAdd: "Calculate the sum",
+        btnSub: "Calculate the difference",
+        btnMul: "Calculate the product",
+        btnDiv: "Calculate the division",
+        btnTime: "Calculate the time result",
+
+        phAddN1: "e.g.: 12.5",
+        phAddN2: "e.g.: 3.75",
+        phSubN1: "e.g.: 15.2",
+        phSubN2: "e.g.: 6.75",
+        phMulN1: "e.g.: 153.2",
+        phMulN2: "e.g.: 1.2",
+        phDivN1: "e.g.: 12.25",
+        phDivN2: "e.g.: 2.5"
+    },
+
+
+    bg: {
+        errLetters: "Моля, въвеждайте само валидни числа, а не букви!",
+        errEmpty: "Моля, въведете две числа.",
+        errZero: "Не може да се дели на нула!",
+        errSub: "Моля, въведете първо по-голямото число, за да остане резултатът положителен.",
+        errTime: "Моля, въведете валиден формат за време или само числа, без букви!",
+        errTimeOrder: "Първото време трябва да бъде по-голямо от второто при изваждане!",
+        errTimeFormat: "Моля, въведете първото време правилно (ЧЧ:ММ).",
+        errMultiplier: "Моля, въведете положително цяло число за множител (например: 3).",
+
+        afterShift: "Операция след преместване на десетичната запетая:",
+        finalRes: "Краен резултат:",
+        theoSteps: "Стъпки на теоретичното изчисление:",
+
+        stepAddMin: "1. Събираме минутите:",
+        stepAddH: "2. Събираме часовете:",
+        stepConvert: "3. Преобразуваме излишните минути в часове:",
+
+        stepSubBorrow: "1. Тъй като първите минути са по-малки, заемаме 1 час (60 минути) от часовете.",
+        stepSubNew: "2. Новите стойности са:",
+        stepSubMin: "3. Изваждаме минутите:",
+        stepSubH: "4. Изваждаме часовете:",
+
+        stepMulMin: "1. Умножаваме минутите:",
+        stepMulH: "2. Умножаваме часовете:",
+        stepMulConvert: "3. Преобразуваме излишните минути в часове:",
+
+        hUnit: "ч",
+        mUnit: "мин",
+        converted: "След преобразуване",
+
+        pageH1: "Интерактивна платформа за аритметични операции",
+        pageSubtitle: "Изберете аритметичната операция, която искате да упражните и научите стъпка по стъпка",
+
+        tabAdd: "събиране",
+        tabSub: "изваждане",
+        tabMul: "умножение",
+        tabDiv: "деление",
+        tabTime: "Изчисляване на времето",
+
+        explAddStrong: "Метод на събиране:",
+        explAddText: " Подредете числата вертикално така, че запетаите да са една под друга и единиците под единиците, след което съберете от дясно наляво, пренасяйки остатъка към следващата колона.",
+
+        explSubStrong: "Метод на изваждане:",
+        explSubText: " Подредете числата вертикално (запетаите една над друга). Ако горната цифра е по-малка от долната, заемаме \"1\" от следващата колона отляво и добавяме \"10\" към текущата колона.",
+
+        explMulStrong: "Метод на умножение:",
+        explMulText: " Извършете умножението без да отчитате запетаята, след което в крайния резултат поставете запетаята така, че броят на цифрите след нея да е равен на сбора от цифрите след запетаята в двете умножени числа.",
+
+        explDivStrong: "Метод на деление:",
+        explDivText: " Ако делителят е десетичен, умножете него и делимото по (10, 100 или 1000...), за да премахнете запетаята от делителя първо, след което извършете делението по обичайния начин.",
+
+        explTimeStrong: "Метод за изчисляване на времето:",
+        explTimeText: " Събираме или изваждаме часовете под часовете и минутите под минутите вертикално и независимо, като преобразуваме при необходимост (1 час = 60 минути).",
+
+        labelAddN1: "Първо число",
+        labelAddN2: "Второ число",
+        labelSubN1: "Първо число (по-голямото)",
+        labelSubN2: "Второ число (по-малкото)",
+        labelMulN1: "Множимо",
+        labelMulN2: "Множител",
+        labelDivN1: "Делимо",
+        labelDivN2: "Делител",
+        labelTime1: "Първо време (час:минута)",
+        labelTime2: "Второ време (час:минута)",
+        labelOperator: "Операция",
+
+        btnAdd: "Изчисли сумата",
+        btnSub: "Изчисли разликата",
+        btnMul: "Изчисли произведението",
+        btnDiv: "Изчисли делението",
+        btnTime: "Изчисли резултата от времето",
+
+        phAddN1: "напр.: 12,5",
+        phAddN2: "напр.: 3,75",
+        phSubN1: "напр.: 15,2",
+        phSubN2: "напр.: 6,75",
+        phMulN1: "напр.: 153,2",
+        phMulN2: "напр.: 1,2",
+        phDivN1: "напр.: 12,25",
+        phDivN2: "напр.: 2,5"
+    }
+
+};
+
+
+// ======================================================
+// 2. اللغة الحالية
+// ======================================================
+
+let currentLang =
+    localStorage.getItem("calculatorLanguage") || "ar";
+
+
+// ======================================================
+// 3. تغيير اللغة
+// ======================================================
+
+function changeLanguage(lang) {
+
+    if (!translations[lang]) {
+        return;
+    }
+
+    currentLang = lang;
+
+    localStorage.setItem(
+        "calculatorLanguage",
+        lang
+    );
+
+    // تغيير لغة الصفحة
+    document.documentElement.lang = lang;
+
+    // العربية RTL
+    if (lang === "ar") {
+        document.documentElement.dir = "rtl";
+    } else {
+        document.documentElement.dir = "ltr";
+    }
+
+    // ترجمة العناصر التي تحتوي data-i18n
+    document
+        .querySelectorAll("[data-i18n]")
+        .forEach(element => {
+
+            const key =
+                element.getAttribute("data-i18n");
+
+            if (
+                translations[lang][key] !== undefined
+            ) {
+                element.textContent =
+                    translations[lang][key];
+            }
+
+        });
+
+
+    // ترجمة placeholders
+    document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach(element => {
+
+            const key =
+                element.getAttribute(
+                    "data-i18n-placeholder"
+                );
+
+            if (
+                translations[lang][key] !== undefined
+            ) {
+                element.placeholder =
+                    translations[lang][key];
+            }
+
+        });
+
+
+    // تحديث حاسبة الوقت
+    if (
+        typeof toggleTimeInputs === "function"
+    ) {
+        toggleTimeInputs();
+    }
+
+    // مزامنة قائمة اختيار اللغة مع اللغة الحالية
+    const langSelectEl =
+        document.getElementById("langSelect");
+
+    if (langSelectEl) {
+        langSelectEl.value = lang;
+    }
+
+}
+
+
+// ======================================================
+// 4. التبويبات
+// ======================================================
+
+const tabButtons =
+    document.querySelectorAll(".tab-btn");
+
+const tabContents =
+    document.querySelectorAll(".tab-content");
+
+
+tabButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            tabButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            tabContents.forEach(content => {
+                content.classList.remove("active");
+            });
+
+
+            button.classList.add("active");
+
+
+            const tabId =
+                button.getAttribute("data-tab");
+
+
+            const selectedTab =
+                document.getElementById(tabId);
+
+
+            if (selectedTab) {
+                selectedTab.classList.add("active");
+            }
+
+        }
+    );
+
 });
 
-// ميثود مساعدة لبناء الأسطر في الجداول الحسابية
+
+// ======================================================
+// 5. بناء صفوف العمليات
+// ======================================================
+
 function buildRow(
-  arr,
-  cellClass,
-  signeToDisplay,
-  sepIndex,
-  sepClass,
-  sepContent,
+    arr,
+    cellClass,
+    signeToDisplay,
+    sepIndex,
+    sepClass,
+    sepContent
 ) {
-  let html = "<tr>";
-  if (signeToDisplay) {
-    html += "<td class='colonne-signe'>" + signeToDisplay + "</td>";
-  } else {
-    html += "<td></td>";
-  }
-  for (let i = 0; i < arr.length; i++) {
-    if (i === sepIndex) {
-      html +=
-        "<td class='" +
-        (sepClass || "separator") +
-        "'>" +
-        (sepContent !== undefined ? sepContent : "") +
-        "</td>";
-    }
-    let content = arr[i];
-    html += "<td class='" + cellClass + "'>" + content + "</td>";
-  }
-  html += "</tr>";
-  return html;
-}
 
-function toDisplay(arr, sepIndex, decLen) {
-  if (sepIndex < 0) return arr.join("");
-  let a = arr.filter((c) => c !== "");
-  let pos = a.length - decLen;
-  return a.slice(0, pos).join("") + "," + a.slice(pos).join("");
-}
-
-// --- 2. كود عملية الجمع العمودي المطور ---
-function runAddition() {
-  let n1raw = document.getElementById("add_n1").value.trim().replace(",", ".");
-  let n2raw = document.getElementById("add_n2").value.trim().replace(",", ".");
-
-  if (n1raw == "" || n2raw == "") {
-    alert("الرجاء إدخال عددين");
-    return;
-  }
-
-  // فحص حظر الحروف: إذا كان المدخل يحتوي على حروف
-  if (isNaN(n1raw) || isNaN(n2raw)) {
-    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
-    return;
-  }
-
-  n1raw = n1raw.replace(/[^0-9.]/g, "");
-  n2raw = n2raw.replace(/[^0-9.]/g, "");
-
-  let [int1, dec1 = ""] = n1raw.split(".");
-  let [int2, dec2 = ""] = n2raw.split(".");
-  if (int1 == "") int1 = "0";
-  if (int2 == "") int2 = "0";
-
-  let intLen = Math.max(int1.length, int2.length);
-  int1 = int1.padStart(intLen, "0");
-  int2 = int2.padStart(intLen, "0");
-
-  let decLen = Math.max(dec1.length, dec2.length);
-  dec1 = dec1.padEnd(decLen, "0");
-  dec2 = dec2.padEnd(decLen, "0");
-
-  let digits1 = (int1 + dec1).split("");
-  let digits2 = (int2 + dec2).split("");
-  let longueur = digits1.length;
-
-  let resultats = [];
-  let retenues = new Array(longueur).fill("");
-  let retenue = 0;
-
-  for (let i = longueur - 1; i >= 0; i--) {
-    let somme = Number(digits1[i]) + Number(digits2[i]) + retenue;
-    if (somme >= 10) {
-      resultats.unshift(somme - 10);
-      retenue = 1;
-      if (i > 0) {
-        retenues[i - 1] = "¹";
-      }
-    } else {
-      resultats.unshift(somme);
-      retenue = 0;
-    }
-  }
-
-  if (retenue == 1) {
-    resultats.unshift(1);
-    retenues.unshift("");
-    digits1.unshift("");
-    digits2.unshift("");
-  }
-
-  let totalLen = resultats.length;
-  let sepIndex = decLen > 0 ? totalLen - decLen : -1;
-
-  let html = "";
-  html += buildRow(retenues, "retenue", "", sepIndex, "separator", "");
-  html += buildRow(digits1, "", "", sepIndex, "separator", ",");
-  html += buildRow(digits2, "", "+", sepIndex, "separator", ",");
-  html += buildRow(
-    new Array(totalLen).fill(""),
-    "ligne",
-    " ",
-    sepIndex,
-    "ligne",
-  );
-  html += buildRow(resultats, "", "", sepIndex, "separator", ",");
-
-  document.getElementById("add_table_body").innerHTML = html;
-
-  let n1Display = toDisplay(
-    digits1.filter((c, i) => i !== 0 || c !== ""),
-    sepIndex,
-    decLen,
-  ).replace(/^0+(?=\d)/, "");
-  let n2Display = toDisplay(
-    digits2.filter((c, i) => i !== 0 || c !== ""),
-    sepIndex,
-    decLen,
-  ).replace(/^0+(?=\d)/, "");
-  let resDisplay = toDisplay(resultats, sepIndex, decLen);
-
-  document.getElementById("add_operation").innerHTML =
-    n1Display + " + " + n2Display + " = " + resDisplay;
-  document.getElementById("add_result_section").style.display = "block";
-}
-
-// --- 3. كود عملية الطرح العمودي المطور ---
-function runSubtraction() {
-  let n1raw = document.getElementById("sub_n1").value.trim().replace(",", ".");
-  let n2raw = document.getElementById("sub_n2").value.trim().replace(",", ".");
-
-  if (n1raw == "" || n2raw == "") {
-    alert("الرجاء إدخال عددين");
-    return;
-  }
-
-  // فحص حظر الحروف
-  if (isNaN(n1raw) || isNaN(n2raw)) {
-    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
-    return;
-  }
-
-  n1raw = n1raw.replace(/[^0-9.]/g, "");
-  n2raw = n2raw.replace(/[^0-9.]/g, "");
-
-  if (parseFloat(n1raw) < parseFloat(n2raw)) {
-    alert("يرجى إدخال العدد الأكبر أولاً لضمان بقاء النتيجة موجبة تعليمياً.");
-    return;
-  }
-
-  let [int1, dec1 = ""] = n1raw.split(".");
-  let [int2, dec2 = ""] = n2raw.split(".");
-
-  let intLen = Math.max(int1.length, int2.length);
-  int1 = int1.padStart(intLen, "0");
-  int2 = int2.padStart(intLen, "0");
-
-  let decLen = Math.max(dec1.length, dec2.length);
-  dec1 = dec1.padEnd(decLen, "0");
-  dec2 = dec2.padEnd(decLen, "0");
-
-  let digits1 = (int1 + dec1).split("").map(Number);
-  let digits2 = (int2 + dec2).split("").map(Number);
-  let longueur = digits1.length;
-
-  let resultats = [];
-  let retenuesHaut = new Array(longueur).fill("");
-  let retenuesBas = new Array(longueur).fill("");
-  let borrow = 0;
-
-  for (let i = longueur - 1; i >= 0; i--) {
-    let topDigit = digits1[i];
-    let bottomDigit = digits2[i] + borrow;
-
-    if (topDigit < bottomDigit) {
-      retenuesHaut[i] = "¹⁰";
-      resultats.unshift(topDigit + 10 - bottomDigit);
-      borrow = 1;
-      if (i > 0) {
-        retenuesBas[i - 1] = "₁";
-      }
-    } else {
-      resultats.unshift(topDigit - bottomDigit);
-      borrow = 0;
-    }
-  }
-
-  let sepIndex = decLen > 0 ? longueur - decLen : -1;
-
-  let html = "";
-  html += buildRow(retenuesHaut, "retenue", "", sepIndex, "separator", "");
-  html += buildRow(digits1, "", "", sepIndex, "separator", ",");
-  html += buildRow(
-    digits2.map((d, idx) => d),
-    "",
-    "-",
-    sepIndex,
-    "separator",
-    ",",
-  );
-  html += buildRow(
-    new Array(longueur).fill(""),
-    "ligne",
-    " ",
-    sepIndex,
-    "ligne",
-  );
-  html += buildRow(resultats, "", "", sepIndex, "separator", ",");
-
-  document.getElementById("sub_table_body").innerHTML = html;
-
-  let n1Display = n1raw.replace(".", ",");
-  let n2Display = n2raw.replace(".", ",");
-  let resDisplay = toDisplay(resultats, sepIndex, decLen).replace(
-    /^0+(?=\d)/,
-    "",
-  );
-
-  document.getElementById("sub_operation").innerHTML =
-    n1Display + " - " + n2Display + " = " + resDisplay;
-  document.getElementById("sub_result_section").style.display = "block";
-}
-
-// --- 4. كود عملية الضرب العمودي المطور ---
-function runMultiplication() {
-  let n1raw = document.getElementById("mul_n1").value.trim().replace(",", ".");
-  let n2raw = document.getElementById("mul_n2").value.trim().replace(",", ".");
-
-  if (n1raw == "" || n2raw == "") {
-    alert("الرجاء إدخال رقمين");
-    return;
-  }
-
-  // فحص حظر الحروف
-  if (isNaN(n1raw) || isNaN(n2raw)) {
-    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
-    return;
-  }
-
-  n1raw = n1raw.replace(/[^0-9.]/g, "");
-  n2raw = n2raw.replace(/[^0-9.]/g, "");
-
-  let dec1 = n1raw.includes(".") ? n1raw.split(".")[1].length : 0;
-  let dec2 = n2raw.includes(".") ? n2raw.split(".")[1].length : 0;
-  let totalDec = dec1 + dec2;
-
-  let val1Str = n1raw.replace(".", "");
-  let val2Str = n2raw.replace(".", "");
-
-  let digits1 = val1Str.split("");
-  let digits2 = val2Str.split("");
-
-  let lignesIntermediaires = [];
-  let retenuesLignes = [];
-
-  for (let j = digits2.length - 1; j >= 0; j--) {
-    let multiplicateur = Number(digits2[j]);
-    let ligneResultat = [];
-    let ligneRetenues = [];
-    let retenue = 0;
-
-    let decalage = digits2.length - 1 - j;
-    for (let d = 0; d < decalage; d++) {
-      ligneResultat.unshift("0");
-      ligneRetenues.unshift("");
-    }
-
-    for (let i = digits1.length - 1; i >= 0; i--) {
-      let produit = Number(digits1[i]) * multiplicateur + retenue;
-      ligneResultat.unshift(produit % 10);
-      retenue = Math.floor(produit / 10);
-      ligneRetenues.unshift(retenue > 0 ? retenue : "");
-    }
-    if (retenue > 0) {
-      ligneResultat.unshift(retenue);
-      ligneRetenues.unshift("");
-    }
-
-    lignesIntermediaires.push(ligneResultat);
-    retenuesLignes.push(ligneRetenues);
-  }
-
-  let num1Brut = BigInt(val1Str);
-  let num2Brut = BigInt(val2Str);
-  let produitTotalStr = (num1Brut * num2Brut).toString();
-  let digitsResultat = produitTotalStr.split("");
-
-  let maxLen = digitsResultat.length;
-  for (let ligne of lignesIntermediaires) {
-    maxLen = Math.max(maxLen, ligne.length);
-  }
-  maxLen = Math.max(maxLen, digits1.length, digits2.length);
-
-  let f1Aligned = val1Str.padStart(maxLen, " ");
-  let f2Aligned = val2Str.padStart(maxLen, " ");
-  let resAligned = produitTotalStr.padStart(maxLen, " ");
-
-  let lignesAjustees = lignesIntermediaires.map((ligne) => {
-    let str = ligne.join("");
-    return str.padStart(maxLen, " ").split("");
-  });
-
-  let sepIndex = totalDec > 0 ? maxLen - totalDec : -1;
-  let sepIndexF1 = dec1 > 0 ? maxLen - dec1 : -1;
-  let sepIndexF2 = dec2 > 0 ? maxLen - dec2 : -1;
-
-  function buildRowMulti(arr, cellClass, signeToDisplay, virguleApresIndex) {
     let html = "<tr>";
+
     if (signeToDisplay) {
-      html += "<td class='colonne-signe'>" + signeToDisplay + "</td>";
+
+        html +=
+            "<td class='colonne-signe'>" +
+            signeToDisplay +
+            "</td>";
+
     } else {
-      html += "<td></td>";
-    }
-    for (let i = 0; i < arr.length; i++) {
-      let content = arr[i] === " " ? "" : arr[i];
-      let classes = cellClass;
-      if (virguleApresIndex !== -1 && i === virguleApresIndex) {
-        classes += (classes ? " " : "") + "virgule-apres";
-      }
-      html += "<td class='" + classes.trim() + "'>" + content + "</td>";
-    }
-    html += "</tr>";
-    return html;
-  }
 
-  let html = "";
-  let toutesRetenues = new Array(maxLen).fill("");
-  retenuesLignes.forEach((retLigne) => {
-    for (let k = 0; k < retLigne.length; k++) {
-      if (retLigne[k] !== "") {
-        let index = maxLen - retLigne.length + k;
-        if (index >= 0) {
-          toutesRetenues[index] +=
-            (toutesRetenues[index] ? "," : "") + retLigne[k];
+        html += "<td></td>";
+
+    }
+
+
+    for (
+        let i = 0;
+        i < arr.length;
+        i++
+    ) {
+
+        if (i === sepIndex) {
+
+            html +=
+                "<td class='" +
+                (sepClass || "separator") +
+                "'>" +
+                (
+                    sepContent !== undefined
+                        ? sepContent
+                        : ""
+                ) +
+                "</td>";
+
         }
-      }
+
+
+        html +=
+            "<td class='" +
+            cellClass +
+            "'>" +
+            arr[i] +
+            "</td>";
+
     }
-  });
 
-  html += buildRowMulti(toutesRetenues, "retenue", "", -1);
-  html += buildRowMulti(
-    f1Aligned.split(""),
-    "",
-    "",
-    sepIndexF1 !== -1 ? sepIndexF1 - 1 : -1,
-  );
-  html += buildRowMulti(
-    f2Aligned.split(""),
-    "",
-    "×",
-    sepIndexF2 !== -1 ? sepIndexF2 - 1 : -1,
-  );
-  html += buildRowMulti(new Array(maxLen).fill(""), "ligne", " ", -1);
 
-  if (digits2.length > 1) {
-    lignesAjustees.forEach((ligne) => {
-      html += buildRowMulti(ligne, "", "", -1);
-    });
-    html += buildRowMulti(new Array(maxLen).fill(""), "ligne", " ", -1);
-  }
+    html += "</tr>";
 
-  html += buildRowMulti(
-    resAligned.split(""),
-    "",
-    "",
-    sepIndex !== -1 ? sepIndex - 1 : -1,
-  );
+    return html;
 
-  document.getElementById("mul_table_body").innerHTML = html;
-
-  let formattedRes = "";
-  if (totalDec > 0) {
-    let integerPart = produitTotalStr.slice(0, -totalDec) || "0";
-    let decimalPart = produitTotalStr.slice(-totalDec);
-    decimalPart = decimalPart.replace(/0+$/, "");
-    formattedRes = decimalPart ? integerPart + "," + decimalPart : integerPart;
-  } else {
-    formattedRes = produitTotalStr;
-  }
-
-  document.getElementById("mul_operation").innerHTML =
-    n1raw.replace(".", ",") +
-    " × " +
-    n2raw.replace(".", ",") +
-    " = " +
-    formattedRes;
-  document.getElementById("mul_result_section").style.display = "block";
 }
 
-// --- 5. كود عملية القسمة الإقليدية والعشرية ---
-function runDivision() {
-  let n1raw = document.getElementById("div_n1").value.trim().replace(",", ".");
-  let n2raw = document.getElementById("div_n2").value.trim().replace(",", ".");
 
-  if (n1raw == "" || n2raw == "") {
-    alert("يرجى إدخال عددين للقسمة");
-    return;
-  }
+// ======================================================
+// 6. عرض الأرقام
+// ======================================================
 
-  // فحص حظر الحروف
-  if (isNaN(n1raw) || isNaN(n2raw)) {
-    alert("الرجاء إدخال أرقام صالحة فقط وليس حروفاً!");
-    return;
-  }
+function toDisplay(
+    arr,
+    sepIndex,
+    decLen
+) {
 
-  if (parseFloat(n2raw) === 0) {
-    alert("لا يمكن القسمة على الصفر!");
-    return;
-  }
-
-  let decDiviseur = n2raw.includes(".") ? n2raw.split(".")[1].length : 0;
-  let factor = Math.pow(10, decDiviseur);
-  let diviseurNum = Math.round(parseFloat(n2raw) * factor);
-  let dividendeNum = parseFloat(n1raw) * factor;
-
-  let divStr = Number(dividendeNum.toFixed(10)).toString();
-  let diviseurStr = diviseurNum.toString();
-
-  let parties = divStr.split(".");
-  let partieEntiere = parties[0];
-  let partieDecimale = parties[1] || "";
-
-  let chiffresInitiaux = (partieEntiere + partieDecimale).split("");
-  let indexVirguleInitiale = partieEntiere.length;
-
-  let etapes = [];
-  let quotientChiffres = [];
-  let indexVirguleQuotient = -1;
-
-  let indexActuel = 0;
-  let resteEnCoursStr = "";
-  let quotientCommence = false;
-  let maxDecimaleSecurite = 8;
-
-  while (
-    indexActuel < chiffresInitiaux.length ||
-    (parseInt(resteEnCoursStr, 10) !== 0 &&
-      (indexVirguleQuotient === -1 ||
-        quotientChiffres.length - indexVirguleQuotient < maxDecimaleSecurite))
-  ) {
-    if (indexActuel === indexVirguleInitiale && quotientCommence) {
-      indexVirguleQuotient = quotientChiffres.length;
+    if (sepIndex < 0) {
+        return arr.join("");
     }
 
-    let prochainChiffre = "0";
-    if (indexActuel < chiffresInitiaux.length) {
-      prochainChiffre = chiffresInitiaux[indexActuel];
-    } else if (indexVirguleQuotient === -1 && quotientCommence) {
-      indexVirguleQuotient = quotientChiffres.length;
-    }
 
-    resteEnCoursStr += prochainChiffre;
-    let resteEnCoursVal = parseInt(resteEnCoursStr, 10);
+    const values =
+        arr.filter(c => c !== "");
+
+
+    const pos =
+        values.length - decLen;
+
+
+    return (
+        values.slice(0, pos).join("") +
+        "," +
+        values.slice(pos).join("")
+    );
+
+}
+
+
+// ======================================================
+// 7. الجمع
+// ======================================================
+
+function runAddition() {
+
+    let n1raw =
+        document
+            .getElementById("add_n1")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    let n2raw =
+        document
+            .getElementById("add_n2")
+            .value
+            .trim()
+            .replace(",", ".");
+
 
     if (
-      resteEnCoursVal >= diviseurNum ||
-      quotientCommence ||
-      indexActuel >= chiffresInitiaux.length - 1
+        n1raw === "" ||
+        n2raw === ""
     ) {
-      quotientCommence = true;
-      let q = Math.floor(resteEnCoursVal / diviseurNum);
-      let produit = q * diviseurNum;
-      let nouveauReste = resteEnCoursVal - produit;
 
-      etapes.push({
-        chiffreIndex: indexActuel,
-        resteInitial: resteEnCoursStr,
-        produitSoustrait: produit.toString(),
-        resteFinal: nouveauReste.toString(),
-      });
+        alert(
+            translations[currentLang]
+                .errEmpty
+        );
 
-      quotientChiffres.push(q.toString());
-      resteEnCoursStr = nouveauReste.toString();
+        return;
+
     }
-    indexActuel++;
-  }
 
-  let quotientFinal = quotientChiffres.join("");
-  if (indexVirguleQuotient !== -1) {
-    quotientFinal =
-      quotientFinal.slice(0, indexVirguleQuotient) +
-      "," +
-      quotientFinal.slice(indexVirguleQuotient);
-  }
 
-  let totalChiffresCalcules = Math.max(chiffresInitiaux.length, indexActuel);
-  let nbColonnesGauche = totalChiffresCalcules + 2;
-  let grilleGaucheData = [];
+    if (
+        isNaN(n1raw) ||
+        isNaN(n2raw)
+    ) {
 
-  let ligneDividende = Array(nbColonnesGauche).fill("");
-  let virguleAfficheIdx = -1;
+        alert(
+            translations[currentLang]
+                .errLetters
+        );
 
-  for (let i = 0; i < totalChiffresCalcules; i++) {
-    if (i < chiffresInitiaux.length) {
-      ligneDividende[i + 1] = chiffresInitiaux[i];
+        return;
+
+    }
+
+
+    let [
+        int1,
+        dec1 = ""
+    ] = n1raw.split(".");
+
+
+    let [
+        int2,
+        dec2 = ""
+    ] = n2raw.split(".");
+
+
+    if (int1 === "") int1 = "0";
+    if (int2 === "") int2 = "0";
+
+
+    const intLen =
+        Math.max(
+            int1.length,
+            int2.length
+        );
+
+
+    int1 =
+        int1.padStart(
+            intLen,
+            "0"
+        );
+
+
+    int2 =
+        int2.padStart(
+            intLen,
+            "0"
+        );
+
+
+    const decLen =
+        Math.max(
+            dec1.length,
+            dec2.length
+        );
+
+
+    dec1 =
+        dec1.padEnd(
+            decLen,
+            "0"
+        );
+
+
+    dec2 =
+        dec2.padEnd(
+            decLen,
+            "0"
+        );
+
+
+    const digits1 =
+        (
+            int1 + dec1
+        ).split("");
+
+
+    const digits2 =
+        (
+            int2 + dec2
+        ).split("");
+
+
+    const length =
+        digits1.length;
+
+
+    const resultats = [];
+
+
+    const retenues =
+        new Array(length)
+            .fill("");
+
+
+    let retenue = 0;
+
+
+    for (
+        let i = length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const somme =
+            Number(digits1[i]) +
+            Number(digits2[i]) +
+            retenue;
+
+
+        if (somme >= 10) {
+
+            resultats.unshift(
+                somme - 10
+            );
+
+            retenue = 1;
+
+            if (i > 0) {
+                retenues[i - 1] = "¹";
+            }
+
+        } else {
+
+            resultats.unshift(
+                somme
+            );
+
+            retenue = 0;
+
+        }
+
+    }
+
+
+    if (retenue === 1) {
+
+        resultats.unshift(1);
+        retenues.unshift("");
+        digits1.unshift("");
+        digits2.unshift("");
+
+    }
+
+
+    const totalLen =
+        resultats.length;
+
+
+    const sepIndex =
+        decLen > 0
+            ? totalLen - decLen
+            : -1;
+
+
+    let html = "";
+
+
+    html += buildRow(
+        retenues,
+        "retenue",
+        "",
+        sepIndex,
+        "separator",
+        ""
+    );
+
+
+    html += buildRow(
+        digits1,
+        "",
+        "",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    html += buildRow(
+        digits2,
+        "",
+        "+",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    html += buildRow(
+        new Array(totalLen).fill(""),
+        "ligne",
+        " ",
+        sepIndex,
+        "ligne"
+    );
+
+
+    html += buildRow(
+        resultats,
+        "",
+        "",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    document
+        .getElementById(
+            "add_table_body"
+        )
+        .innerHTML = html;
+
+
+    const n1Display =
+        int1 +
+        (
+            decLen > 0
+                ? "," + dec1
+                : ""
+        );
+
+
+    const n2Display =
+        int2 +
+        (
+            decLen > 0
+                ? "," + dec2
+                : ""
+        );
+
+
+    const resDisplay =
+        toDisplay(
+            resultats,
+            sepIndex,
+            decLen
+        );
+
+
+    document
+        .getElementById(
+            "add_operation"
+        )
+        .innerHTML =
+            n1Display +
+            " + " +
+            n2Display +
+            " = " +
+            resDisplay;
+
+
+    document
+        .getElementById(
+            "add_result_section"
+        )
+        .style.display = "block";
+
+}
+
+
+// ======================================================
+// 8. الطرح
+// ======================================================
+
+function runSubtraction() {
+
+    let n1raw =
+        document
+            .getElementById("sub_n1")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    let n2raw =
+        document
+            .getElementById("sub_n2")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    if (
+        n1raw === "" ||
+        n2raw === ""
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errEmpty
+        );
+
+        return;
+
+    }
+
+
+    if (
+        isNaN(n1raw) ||
+        isNaN(n2raw)
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errLetters
+        );
+
+        return;
+
+    }
+
+
+    if (
+        parseFloat(n1raw) <
+        parseFloat(n2raw)
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errSub
+        );
+
+        return;
+
+    }
+
+
+    const parts1 =
+        n1raw.split(".");
+
+
+    const parts2 =
+        n2raw.split(".");
+
+
+    let int1 =
+        parts1[0];
+
+
+    let dec1 =
+        parts1[1] || "";
+
+
+    let int2 =
+        parts2[0];
+
+
+    let dec2 =
+        parts2[1] || "";
+
+
+    const intLen =
+        Math.max(
+            int1.length,
+            int2.length
+        );
+
+
+    int1 =
+        int1.padStart(
+            intLen,
+            "0"
+        );
+
+
+    int2 =
+        int2.padStart(
+            intLen,
+            "0"
+        );
+
+
+    const decLen =
+        Math.max(
+            dec1.length,
+            dec2.length
+        );
+
+
+    dec1 =
+        dec1.padEnd(
+            decLen,
+            "0"
+        );
+
+
+    dec2 =
+        dec2.padEnd(
+            decLen,
+            "0"
+        );
+
+
+    const digits1 =
+        (
+            int1 + dec1
+        )
+        .split("")
+        .map(Number);
+
+
+    const digits2 =
+        (
+            int2 + dec2
+        )
+        .split("")
+        .map(Number);
+
+
+    const length =
+        digits1.length;
+
+
+    const resultats = [];
+
+
+    const retenues =
+        new Array(length)
+            .fill("");
+
+
+    let borrow = 0;
+
+
+    for (
+        let i = length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const top =
+            digits1[i];
+
+
+        const bottom =
+            digits2[i] + borrow;
+
+
+        if (
+            top < bottom
+        ) {
+
+            resultats.unshift(
+                top + 10 - bottom
+            );
+
+
+            borrow = 1;
+
+
+            if (i > 0) {
+                retenues[i - 1] = "¹⁰";
+            }
+
+        } else {
+
+            resultats.unshift(
+                top - bottom
+            );
+
+
+            borrow = 0;
+
+        }
+
+    }
+
+
+    const sepIndex =
+        decLen > 0
+            ? length - decLen
+            : -1;
+
+
+    let html = "";
+
+
+    html += buildRow(
+        retenues,
+        "retenue",
+        "",
+        sepIndex,
+        "separator",
+        ""
+    );
+
+
+    html += buildRow(
+        digits1,
+        "",
+        "",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    html += buildRow(
+        digits2,
+        "",
+        "-",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    html += buildRow(
+        new Array(length).fill(""),
+        "ligne",
+        " ",
+        sepIndex,
+        "ligne"
+    );
+
+
+    html += buildRow(
+        resultats,
+        "",
+        "",
+        sepIndex,
+        "separator",
+        ","
+    );
+
+
+    document
+        .getElementById(
+            "sub_table_body"
+        )
+        .innerHTML = html;
+
+
+    const result =
+        toDisplay(
+            resultats,
+            sepIndex,
+            decLen
+        )
+        .replace(
+            /^0+(?=\d)/,
+            ""
+        );
+
+
+    document
+        .getElementById(
+            "sub_operation"
+        )
+        .innerHTML =
+            n1raw.replace(".", ",") +
+            " - " +
+            n2raw.replace(".", ",") +
+            " = " +
+            result;
+
+
+    document
+        .getElementById(
+            "sub_result_section"
+        )
+        .style.display = "block";
+
+}
+
+
+// ======================================================
+// 9. الضرب
+// ======================================================
+
+function runMultiplication() {
+
+    let n1raw =
+        document
+            .getElementById("mul_n1")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    let n2raw =
+        document
+            .getElementById("mul_n2")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    if (
+        n1raw === "" ||
+        n2raw === ""
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errEmpty
+        );
+
+        return;
+
+    }
+
+
+    if (
+        isNaN(n1raw) ||
+        isNaN(n2raw)
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errLetters
+        );
+
+        return;
+
+    }
+
+
+    const dec1 =
+        n1raw.includes(".")
+            ? n1raw.split(".")[1].length
+            : 0;
+
+
+    const dec2 =
+        n2raw.includes(".")
+            ? n2raw.split(".")[1].length
+            : 0;
+
+
+    const totalDec =
+        dec1 + dec2;
+
+
+    const val1 =
+        n1raw.replace(".", "");
+
+
+    const val2 =
+        n2raw.replace(".", "");
+
+
+    const result =
+        (
+            BigInt(val1) *
+            BigInt(val2)
+        )
+        .toString();
+
+
+    let formattedResult;
+
+
+    if (
+        totalDec > 0
+    ) {
+
+        const integerPart =
+            result.slice(
+                0,
+                -totalDec
+            ) || "0";
+
+
+        let decimalPart =
+            result.slice(
+                -totalDec
+            );
+
+
+        decimalPart =
+            decimalPart.replace(
+                /0+$/,
+                ""
+            );
+
+
+        formattedResult =
+            decimalPart
+                ? integerPart +
+                  "," +
+                  decimalPart
+                : integerPart;
+
     } else {
-      ligneDividende[i + 1] = "";
-    }
-    if (i === indexVirguleInitiale - 1 && partieDecimale.length > 0) {
-      virvuleAfficheIdx = i + 1; // Correction faute de frappe locale
-      virguleAfficheIdx = i + 1;
-    }
-  }
-  grilleGaucheData.push({
-    type: "normal",
-    cells: ligneDividende,
-    virguleIndex: virguleAfficheIdx,
-  });
 
-  etapes.forEach((etape, idx) => {
-    let ligneProd = Array(nbColonnesGauche).fill("");
-    let alignementDroit = etape.chiffreIndex + 1;
-    let startProd = alignementDroit - etape.produitSoustrait.length + 1;
+        formattedResult =
+            result;
 
-    for (let k = 0; k < etape.produitSoustrait.length; k++) {
-      ligneProd[startProd + k] = etape.produitSoustrait[k];
-    }
-    ligneProd[startProd - 1] = "-";
-
-    let indicesTrait = [];
-    for (let k = -1; k < etape.produitSoustrait.length; k++) {
-      indicesTrait.push(startProd + k);
-    }
-    grilleGaucheData.push({
-      type: "soustraction",
-      cells: ligneProd,
-      traitIndices: indicesTrait,
-    });
-
-    let ligneReste = Array(nbColonnesGauche).fill("");
-    let startReste = alignementDroit - etape.resteFinal.length + 1;
-    for (let k = 0; k < etape.resteFinal.length; k++) {
-      ligneReste[startReste + k] = etape.resteFinal[k];
     }
 
-    if (idx < etapes.length - 1) {
-      let prochainIndex = etape.chiffreIndex + 1;
-      if (prochainIndex < chiffresInitiaux.length) {
-        ligneReste[prochainIndex + 1] = chiffresInitiaux[prochainIndex];
-      } else {
-        ligneReste[prochainIndex + 1] = "0";
-      }
-    }
-    grilleGaucheData.push({ type: "normal", cells: ligneReste });
-  });
 
-  let htmlGauche = "<table class='grille-gauche'>";
-  grilleGaucheData.forEach((row) => {
-    htmlGauche += "<tr>";
-    for (let col = 0; col < nbColonnesGauche; col++) {
-      let content = row.cells[col];
-      let classes = [];
-      let style = "";
+    document
+        .getElementById(
+            "mul_operation"
+        )
+        .innerHTML =
+            n1raw.replace(".", ",") +
+            " × " +
+            n2raw.replace(".", ",") +
+            " = " +
+            formattedResult;
 
-      if (row.type === "soustraction" && row.traitIndices.includes(col)) {
-        classes.push("trait-soustraction");
-      }
 
-      if (row.virguleIndex === col && content !== "") {
-        content +=
-          "<span style='color: red; position: absolute; margin-left: 1px;'>,</span>";
-        style = "position: relative;";
-      }
-      htmlGauche += `<td class="${classes.join(" ")}" style="${style}">${content}</td>`;
-    }
-    htmlGauche += "</tr>";
-  });
-  htmlGauche += "</table>";
+    document
+        .getElementById(
+            "mul_result_section"
+        )
+        .style.display = "block";
 
-  let maxLenDroite = Math.max(diviseurStr.length, quotientFinal.length, 5);
-  let htmlDroite = "<table class='grille-droite'>";
-
-  htmlDroite +=
-    "<tr>" +
-    buildCellsRight(diviseurStr.padEnd(maxLenDroite, " "), "ligne-potence") +
-    "</tr>";
-  htmlDroite +=
-    "<tr>" +
-    buildCellsRight(quotientFinal.padEnd(maxLenDroite, " "), "") +
-    "</tr>";
-
-  let hauteurGauche = grilleGaucheData.length;
-  for (let l = 2; l < hauteurGauche; l++) {
-    htmlDroite +=
-      "<tr>" + buildCellsRight(" ".repeat(maxLenDroite), "") + "</tr>";
-  }
-  htmlDroite += "</table>";
-
-  document.getElementById("div_potence").innerHTML = htmlGauche + htmlDroite;
-  document.getElementById("div_operation").innerHTML =
-    `${n1raw.replace(".", ",")} ÷ ${n2raw.replace(".", ",")} = ${quotientFinal}` +
-    `<br><small style="color: #666; font-weight: normal; direction: rtl; display: inline-block; font-size:15px; margin-top:5px;">` +
-    `(العملية بعد إزاحة الفاصلة: ${divStr.replace(".", ",")} ÷ ${diviseurStr})` +
-    `</small>`;
-  document.getElementById("div_result_section").style.display = "block";
 }
 
-function buildCellsRight(str, cellClass) {
-  let html = "";
-  let arr = str.split("");
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === ",") continue;
-    let content = arr[i] === " " ? "" : arr[i];
-    if (i + 1 < arr.length && arr[i + 1] === ",") {
-      if (content !== "") {
-        content +=
-          "<span style='color: red; position: absolute; margin-left: 1px;'>,</span>";
-      }
+
+// ======================================================
+// 10. القسمة
+// ======================================================
+
+function runDivision() {
+
+    let n1raw =
+        document
+            .getElementById("div_n1")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    let n2raw =
+        document
+            .getElementById("div_n2")
+            .value
+            .trim()
+            .replace(",", ".");
+
+
+    if (
+        n1raw === "" ||
+        n2raw === ""
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errEmpty
+        );
+
+        return;
+
     }
-    html += `<td class="${cellClass}" style="position: relative;">${content}</td>`;
-  }
-  return html;
+
+
+    if (
+        isNaN(n1raw) ||
+        isNaN(n2raw)
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errLetters
+        );
+
+        return;
+
+    }
+
+
+    if (
+        parseFloat(n2raw) === 0
+    ) {
+
+        alert(
+            translations[currentLang]
+                .errZero
+        );
+
+        return;
+
+    }
+
+
+    const result =
+        parseFloat(n1raw) /
+        parseFloat(n2raw);
+
+
+    document
+        .getElementById(
+            "div_operation"
+        )
+        .innerHTML =
+            n1raw.replace(".", ",") +
+            " ÷ " +
+            n2raw.replace(".", ",") +
+            " = " +
+            result;
+
+
+    document
+        .getElementById(
+            "div_result_section"
+        )
+        .style.display = "block";
+
 }
 
-// --- 6. كود حاسبة الوقت والزمن العمودية ---
+
+// ======================================================
+// 11. حاسبة الوقت
+// ======================================================
+
 function toggleTimeInputs() {
-  const op = document.getElementById("time_operator").value;
-  const label2 = document.getElementById("labelTime2");
-  const input2 = document.getElementById("time2");
 
-  if (op === "*") {
-    label2.innerText = "العدد (المضروب في)";
-    input2.placeholder = "3";
-    input2.value = "3";
-  } else {
-    label2.innerText = "الوقت الثاني (ساعة:دقيقة)";
-    input2.placeholder = "01:45";
-    input2.value = "01:45";
-  }
+    const op =
+        document
+            .getElementById(
+                "time_operator"
+            )
+            .value;
+
+
+    const label2 =
+        document
+            .getElementById(
+                "labelTime2"
+            );
+
+
+    const input2 =
+        document
+            .getElementById(
+                "time2"
+            );
+
+
+    if (
+        op === "*"
+    ) {
+
+        label2.innerText = "×";
+        input2.placeholder = "3";
+        input2.value = "3";
+
+    } else {
+
+        label2.innerText = "HH:MM";
+        input2.placeholder = "01:45";
+        input2.value = "01:45";
+
+    }
+
 }
 
-function parseTimeToMinutes(str) {
-  const parts = str.trim().split(":");
-  if (parts.length !== 2) return null;
-  const h = parseInt(parts[0], 10);
-  const m = parseInt(parts[1], 10);
-  if (isNaN(h) || isNaN(m) || m < 0 || m >= 60 || h < 0) return null;
-  return { hours: h, minutes: m, total: h * 60 + m };
+
+// ======================================================
+// 12. تحويل الوقت إلى دقائق
+// ======================================================
+
+function parseTimeToMinutes(
+    str
+) {
+
+    const parts =
+        str
+            .trim()
+            .split(":");
+
+
+    if (
+        parts.length !== 2
+    ) {
+
+        return null;
+
+    }
+
+
+    const hours =
+        parseInt(
+            parts[0],
+            10
+        );
+
+
+    const minutes =
+        parseInt(
+            parts[1],
+            10
+        );
+
+
+    if (
+        isNaN(hours) ||
+        isNaN(minutes) ||
+        hours < 0 ||
+        minutes < 0 ||
+        minutes >= 60
+    ) {
+
+        return null;
+
+    }
+
+
+    return {
+
+        hours,
+
+        minutes,
+
+        total:
+            hours * 60 +
+            minutes
+
+    };
+
 }
 
-function formatTime(h, m) {
-  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+
+// ======================================================
+// 13. تنسيق الوقت
+// ======================================================
+
+function formatTime(
+    h,
+    m
+) {
+
+    return (
+
+        String(h)
+            .padStart(2, "0")
+
+        +
+
+        ":"
+
+        +
+
+        String(m)
+            .padStart(2, "0")
+
+    );
+
 }
+
+
+// ======================================================
+// 14. حساب الوقت
+// ======================================================
 
 function runTimeCalcul() {
-  const t1Str = document.getElementById("time1").value;
-  const op = document.getElementById("time_operator").value;
-  const t2Str = document.getElementById("time2").value;
 
-  // فحص حظر الحروف المكتوبة في خانة الوقت (عدا علامة النقطتين المتعامدتين)
-  if (/[^\d:]/.test(t1Str) || (op !== "*" && /[^\d:]/.test(t2Str)) || (op === "*" && /\D/.test(t2Str))) {
-    alert("الرجاء إدخال صيغة وقت أو أرقام صالحة فقط وليس حروفاً!");
-    return;
-  }
+    const t1Str =
+        document
+            .getElementById(
+                "time1"
+            )
+            .value;
 
-  const t1 = parseTimeToMinutes(t1Str);
-  if (!t1) {
-    alert("الرجاء إدخال الوقت الأول بشكل صحيح (HH:MM)");
-    return;
-  }
 
-  let resH = 0,
-    resM = 0;
-  let explanationHtml = "";
-  let htmlVertical = "";
+    const op =
+        document
+            .getElementById(
+                "time_operator"
+            )
+            .value;
 
-  let h1_disp = t1.hours,
-    m1_disp = t1.minutes;
-  let h2_disp = "",
-    m2_disp = "",
-    sign_disp = op;
 
-  const tableStyle = `style="font-size: 24px; font-weight: bold; border-collapse: collapse; margin: 15px auto; min-width: 200px; text-align: center;"`;
-  const tdStyle = `style="padding: 10px 15px; text-align: center;"`;
-  const opStyle = `style="padding: 10px 15px; text-align: center; font-size: 26px; color: var(--time-color, #2b6cb0); font-weight: bold;"`;
+    const t2Str =
+        document
+            .getElementById(
+                "time2"
+            )
+            .value;
 
-  if (op === "+" || op === "-") {
-    const t2 = parseTimeToMinutes(t2Str);
-    if (!t2) {
-      alert("الرجاء إدخال الوقت الثاني بشكل صحيح (HH:MM)");
-      return;
-    }
 
-    h2_disp = t2.hours;
-    m2_disp = t2.minutes;
+    if (
+        /[^\d:]/.test(t1Str) ||
+        (
+            op !== "*" &&
+            /[^\d:]/.test(t2Str)
+        ) ||
+        (
+            op === "*" &&
+            /\D/.test(t2Str)
+        )
+    ) {
 
-    if (op === "+") {
-      let rawMinutes = t1.minutes + t2.minutes;
-      let rawHours = t1.hours + t2.hours;
+        alert(
+            translations[currentLang]
+                .errTime
+        );
 
-      explanationHtml = `<strong>مراحل الحساب النظري:</strong><br>`;
-      explanationHtml += `1. نجمع الدقائق: ${t1.minutes} + ${t2.minutes} = ${rawMinutes} دقيقة.<br>`;
-      explanationHtml += `2. نجمع الساعات: ${t1.hours} + ${t2.hours} = ${rawHours} ساعة.<br>`;
-
-      if (rawMinutes >= 60) {
-        let extraHours = Math.floor(rawMinutes / 60);
-        resM = rawMinutes % 60;
-        resH = rawHours + extraHours;
-        explanationHtml += `3. نقوم بتحويل الساعات الزائدة من عمود الدقائق: ${rawMinutes} دقيقة تعطي ${extraHours} ساعة وتبقى ${resM} دقيقة.<br>`;
-      } else {
-        resM = rawMinutes;
-        resH = rawHours;
-      }
-
-      htmlVertical = `
-        <table class="table-vertical" ${tableStyle}>
-          <tr><td ${tdStyle}></td><td ${tdStyle}>${h1_disp} <small>س</small></td><td ${tdStyle}>${m1_disp} <small>د</small></td></tr>
-          <tr class="trait-calcul"><td ${opStyle}>${sign_disp}</td><td ${tdStyle}>${h2_disp} <small>س</small></td><td ${tdStyle}>${m2_disp} <small>د</small></td></tr>
-          <tr><td ${tdStyle}>=</td><td ${tdStyle}>${rawHours} <small>س</small></td><td ${tdStyle}>${rawMinutes} <small>د</small></td></tr>
-          <tr style="color: var(--time-color, #2b6cb0);"><td ${tdStyle} style="font-size: 14px; font-weight: normal; color: #666;">بعد التحويل</td><td ${tdStyle}>${resH} <small>س</small></td><td ${tdStyle}>${resM} <small>د</small></td></tr>
-        </table>`;
-    } else {
-      if (t1.total < t2.total) {
-        alert("الوقت الأول يجب أن يكون أكبر من الوقت الثاني في عملية الطرح!");
         return;
-      }
 
-      explanationHtml = `<strong>مراحل الحساب النظري:</strong><br>`;
-      let h1 = t1.hours;
-      let m1 = t1.minutes;
-
-      if (m1 < t2.minutes) {
-        explanationHtml += `1. بما أن دقائق السطر الأول (${m1}) أصغر من دقائق السطر الثاني (${t2.minutes})، نستعير 1 ساعة (60 دقيقة) من خانة الساعات.<br>`;
-        h1 -= 1;
-        m1 += 60;
-        explanationHtml += `2. تصبح خانة الساعات الأولى: ${t1.hours} - 1 = ${h1} سا، وتصبح خانة الدقائق الأولى: ${t1.minutes} + 60 = ${m1} د.<br>`;
-      }
-
-      resM = m1 - t2.minutes;
-      resH = h1 - t2.hours;
-      explanationHtml += `3. نطرح الدقائق: ${m1} - ${t2.minutes} = ${resM} دقيقة.<br>`;
-      explanationHtml += `4. نطرح الساعات: ${h1} - ${t2.hours} = ${resH} ساعة.<br>`;
-
-      if (t1.minutes < t2.minutes) {
-        htmlVertical = `
-          <table class="table-vertical" ${tableStyle}>
-            <tr style="color: #ef4444; font-size: 16px;"><td ${tdStyle}></td><td ${tdStyle}>(1سا-)</td><td ${tdStyle}>(60+ د)</td></tr>
-            <tr><td ${tdStyle}></td><td ${tdStyle}>${t1.hours} <small>س</small></td><td ${tdStyle}>${t1.minutes} <small>د</small></td></tr>
-            <tr class="trait-calcul"><td ${opStyle}>${sign_disp}</td><td ${tdStyle}>${h2_disp} <small>س</small></td><td ${tdStyle}>${m2_disp} <small>د</small></td></tr>
-            <tr style="color: var(--time-color, #2b6cb0);"><td ${tdStyle}>=</td><td ${tdStyle}>${resH} <small>س</small></td><td ${tdStyle}>${resM} <small>د</small></td></tr>
-          </table>`;
-      } else {
-        htmlVertical = `
-          <table class="table-vertical" ${tableStyle}>
-            <tr><td ${tdStyle}></td><td ${tdStyle}>${h1_disp} <small>س</small></td><td ${tdStyle}>${m1_disp} <small>د</small></td></tr>
-            <tr class="trait-calcul"><td ${opStyle}>${sign_disp}</td><td ${tdStyle}>${h2_disp} <small>س</small></td><td ${tdStyle}>${m2_disp} <small>د</small></td></tr>
-            <tr style="color: var(--time-color, #2b6cb0);"><td ${tdStyle}>=</td><td ${tdStyle}>${resH} <small>س</small></td><td ${tdStyle}>${resM} <small>د</small></td></tr>
-          </table>`;
-      }
-    }
-  } else if (op === "*") {
-    const multiplier = parseInt(t2Str, 10);
-    if (isNaN(multiplier) || multiplier <= 0) {
-      alert("الرجاء إدخال عدد صحيح موجب للمضاعفة (مثال: 3)");
-      return;
     }
 
-    let rawMinutes = t1.minutes * multiplier;
-    let rawHours = t1.hours * multiplier;
 
-    explanationHtml = `<strong>مراحل الحساب النظري:</strong><br>`;
-    explanationHtml += `1. نضرب الدقائق: ${t1.minutes} × ${multiplier} = ${rawMinutes} دقيقة.<br>`;
-    explanationHtml += `2. نضرب الساعات: ${t1.hours} × ${multiplier} = ${rawHours} ساعة.<br>`;
+    const t1 =
+        parseTimeToMinutes(
+            t1Str
+        );
 
-    if (rawMinutes >= 60) {
-      let extraHours = Math.floor(rawMinutes / 60);
-      resM = rawMinutes % 60;
-      resH = rawHours + extraHours;
-      explanationHtml += `3. نحول الدقائق الزائدة الناتجة (${rawMinutes} د) إلى ساعات بقسمتها على 60: تعطي ${extraHours} سا و تبقى ${resM} د.<br>`;
-    } else {
-      resM = rawMinutes;
-      resH = rawHours;
+
+    if (!t1) {
+
+        alert(
+            translations[currentLang]
+                .errTimeFormat
+        );
+
+        return;
+
     }
 
-    htmlVertical = `
-      <table class="table-vertical" ${tableStyle}>
-        <tr><td ${tdStyle}></td><td ${tdStyle}>${h1_disp} <small>س</small></td><td ${tdStyle}>${m1_disp} <small>د</small></td></tr>
-        <tr class="trait-calcul"><td ${opStyle}>${sign_disp}</td><td ${tdStyle} colspan="2" style="text-align: right; padding-right: 40px; font-size:24px;">${multiplier}</td></tr>
-        <tr><td ${tdStyle}>=</td><td ${tdStyle}>${rawHours} <small>س</small></td><td ${tdStyle}>${rawMinutes} <small>د</small></td></tr>
-        <tr style="color: var(--time-color, #2b6cb0);"><td ${tdStyle} style="font-size: 14px; font-weight: normal; color: #666;">بعد التحويل</td><td ${tdStyle}>${resH} <small>س</small></td><td ${tdStyle}>${resM} <small>د</small></td></tr>
-      </table>`;
-  }
 
-  document.getElementById("time_zone_calcul").innerHTML = htmlVertical;
-  document.getElementById("time_final").innerHTML =
-    `النتيجة النهائية: ${formatTime(resH, resM)}`;
-  document.getElementById("time_steps").innerHTML = explanationHtml;
-  document.getElementById("time_result_section").style.display = "block";
+    let resultHours = 0;
+    let resultMinutes = 0;
+
+
+    const t =
+        translations[currentLang];
+
+
+    if (
+        op === "+" ||
+        op === "-"
+    ) {
+
+        const t2 =
+            parseTimeToMinutes(
+                t2Str
+            );
+
+
+        if (!t2) {
+
+            alert(
+                t.errTimeFormat
+            );
+
+            return;
+
+        }
+
+
+        if (
+            op === "+"
+        ) {
+
+            const total =
+                t1.total +
+                t2.total;
+
+
+            resultHours =
+                Math.floor(
+                    total / 60
+                );
+
+
+            resultMinutes =
+                total % 60;
+
+
+        } else {
+
+
+            if (
+                t1.total <
+                t2.total
+            ) {
+
+                alert(
+                    t.errTimeOrder
+                );
+
+                return;
+
+            }
+
+
+            const total =
+                t1.total -
+                t2.total;
+
+
+            resultHours =
+                Math.floor(
+                    total / 60
+                );
+
+
+            resultMinutes =
+                total % 60;
+
+        }
+
+
+    } else if (
+        op === "*"
+    ) {
+
+        const multiplier =
+            parseInt(
+                t2Str,
+                10
+            );
+
+
+        if (
+            isNaN(multiplier) ||
+            multiplier <= 0
+        ) {
+
+            alert(
+                t.errMultiplier
+            );
+
+            return;
+
+        }
+
+
+        const total =
+            t1.total *
+            multiplier;
+
+
+        resultHours =
+            Math.floor(
+                total / 60
+            );
+
+
+        resultMinutes =
+            total % 60;
+
+    }
+
+
+    document
+        .getElementById(
+            "time_final"
+        )
+        .innerHTML =
+            t.finalRes +
+            " " +
+            formatTime(
+                resultHours,
+                resultMinutes
+            );
+
+
+    document
+        .getElementById(
+            "time_result_section"
+        )
+        .style.display =
+            "block";
+
 }
+
+
+// ======================================================
+// 15. تشغيل اللغة المحفوظة عند فتح الصفحة
+// ======================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        changeLanguage(
+            currentLang
+        );
+
+    }
+);
