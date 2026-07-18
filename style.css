@@ -1,6 +1,3 @@
-/* ==========================================================
-   1. VARIABLES & RESET DESIGN
-   ========================================================== */
 :root {
   --primary-color: #1900ff;
   --add-color: #2196f3;
@@ -11,78 +8,145 @@
   --bg-gradient: linear-gradient(135deg, #f5f7fb 0%, #83f7f1 100%);
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: var(--bg-gradient);
   margin: 0;
-  /* Protection spéciale écran Oppo (encoche caméra et barre du bas) */
-  padding: calc(15px + env(safe-area-inset-top)) 12px calc(25px + env(safe-area-inset-bottom)) 12px;
+  padding: 20px;
   min-height: 100vh;
-  min-height: 100dvh; /* Évite les bugs de hauteur sur navigateurs mobiles */
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #2c3e50;
 }
-
-/* ==========================================================
-   1bis. SÉLECTEUR DE LANGUE (toujours à droite de l'écran)
-   ========================================================== */
-.language-selector {
+/* حاوية الرموز الموزعة في الخلفية */
+.math-animation-container {
   position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: 10px;
-  left: auto;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: white;
-  padding: 6px 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border: 1px solid #e2e8f0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* تجعل الرموز خلف الأزرار والجداول */
+  pointer-events: none; /* تمنع الرموز من إعاقة الضغط على الواجهة */
+  overflow: hidden;
 }
 
-.language-selector label {
-  font-size: 15px;
+/* التنسيق المشترك للرموز (الأسلوب الكرتوني بحدود داكنة) */
+.floating-sign {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(3px 3px 0px #4180e7); /* ظل داكن يعطي عمقاً كرتونياً */
+  animation: floatAround 12s infinite ease-in-out;
 }
 
-.language-selector select {
-  width: auto;
-  padding: 4px 8px;
-  font-size: 13px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #f8fafc;
+.floating-sign path {
+  stroke: currentcolor;
+  stroke-width: 14px; /* خط سميك وواضح */
 }
 
-/* ==========================================================
-   2. INTERFACE & CONTENEUR PRINCIPAL
-   ========================================================== */
+.floating-sign circle {
+  fill: currentcolor;
+}
+
+/* توزيع الألوان العشوائية والأماكن والحركات المتفاوتة للرموز */
+.plus {
+  color: #c300ff; /* بنفسجي */
+  top: 15%;
+  left: 10%;
+  animation-duration: 14s;
+}
+
+.minus {
+  color: #00ff5e; /* أخضر */
+  top: 75%;
+  left: 15%;
+  animation-duration: 10s;
+  animation-delay: 2s;
+}
+
+.multiply {
+  color: #ff6a00; /* برتقالي */
+  top: 25%;
+  right: 12%;
+  animation-duration: 16s;
+  animation-delay: 1s;
+}
+
+.divide {
+  color: #09ffff; /* سماوي */
+  top: 70%;
+  right: 18%;
+  animation-duration: 12s;
+  animation-delay: 3s;
+}
+
+.equals {
+  color: #ffc401; /* أصفر */
+  top: 48%;
+  left: 45%;
+  width: 60px;
+  height: 60px;
+  animation-duration: 18s;
+}
+.time-icon {
+  color: #ea0808; /* أصفر */
+  top: 48%;
+  left: 10%;
+  width: 50px;
+  height: 60px;
+  animation-duration: 18s;
+}
+.time-icon2 {
+  color: #ea0808; /* أصفر */
+  top: 42%;
+  left: 10%;
+  width: 50px;
+  height: 60px;
+  animation-duration: 18s;
+}
+
+/* تأثير الحركة الاهتزازية العائمة (Floating Effect) */
+@keyframes floatAround {
+  0% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-25px) translateX(15px) rotate(8deg) scale(1.05);
+  }
+  50% {
+    transform: translateY(10px) translateX(-10px) rotate(-12deg) scale(0.95);
+  }
+  75% {
+    transform: translateY(-15px) translateX(-5px) rotate(5deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+}
 .container {
   width: 100%;
   max-width: 900px;
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-  padding: 15px;
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  padding: 30px;
+  box-sizing: border-box;
   border: 1px solid rgba(255,255,255,0.8);
-  margin-top: 5px;
 }
 
+/* رأس الصفحة والترحيب */
 .header {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
 }
 
 .header h1 {
   margin: 0;
-  font-size: 22px;
+  font-size: 32px;
   color: var(--primary-color);
   font-weight: 800;
 }
@@ -90,174 +154,199 @@ body {
 .header p {
   color: #7f8c8d;
   margin-top: 5px;
-  font-size: 13px;
+  font-size: 16px;
 }
 
-.explication {
-  background: #f8fafc;
-  border-right: 4px solid var(--primary-color);
-  padding: 10px;
-  margin-bottom: 15px;
-  font-size: 13px;
-  color: #334155;
-  border-radius: 6px;
-  line-height: 1.4;
-}
-
-/* ==========================================================
-   3. DISPOSITION DES BOUTONS (TABS) - MOBILE FIRST
-   ========================================================== */
+/* التبويبات (Tabs) */
 .tabs-nav {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colonnes sur téléphone */
-  gap: 8px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(5, 1fr); /* تم التعديل ليستوعب 5 أزرار */
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 .tab-btn {
   background: #f8fafc;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 8px 4px;
+  border-radius: 16px;
+  padding: 15px 5px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: bold;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   color: #64748b;
-  white-space: nowrap;
 }
 
 .tab-btn svg {
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
+  transition: transform 0.3s ease;
 }
 
-/* Placement en grille 3 en haut / 2 en bas */
-.tab-btn[data-tab="addition"]       { grid-column: 1; grid-row: 1; }
-.tab-btn[data-tab="subtraction"]    { grid-column: 2; grid-row: 1; }
-.tab-btn[data-tab="multiplication"] { grid-column: 3; grid-row: 1; }
-.tab-btn[data-tab="division"]       { grid-column: 1; grid-row: 2; }
-.tab-btn[data-tab="time"]           { grid-column: 3; grid-row: 2; }
-
-/* BOUTON DE CALCUL AU MILIEU (Sous les 3 premiers boutons) */
-.btn-calc {
-  grid-column: 2;
-  grid-row: 2;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--primary-color);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.tab-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.05);
 }
 
-/* Couleurs des onglets actifs */
-.tab-btn[data-tab="addition"].active { background: #e3f2fd; border-color: var(--add-color); color: var(--add-color); }
-.tab-btn[data-tab="subtraction"].active { background: #ffebee; border-color: var(--sub-color); color: var(--sub-color); }
-.tab-btn[data-tab="multiplication"].active { background: #e0f2f1; border-color: var(--mul-color); color: var(--mul-color); }
-.tab-btn[data-tab="division"].active { background: #fff3e0; border-color: var(--div-color); color: var(--div-color); }
-.tab-btn[data-tab="time"].active { background: #f3e5f5; border-color: var(--time-color); color: var(--time-color); }
+.tab-btn:hover svg {
+  transform: scale(1.1);
+}
 
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+/* تلوين التبويبات عند التفعيل */
+.tab-btn[data-tab="addition"].active {
+  background: #e3f2fd; border-color: var(--add-color); color: var(--add-color);
+}
+.tab-btn[data-tab="subtraction"].active {
+  background: #ffebee; border-color: var(--sub-color); color: var(--sub-color);
+}
+.tab-btn[data-tab="multiplication"].active {
+  background: #e0f2f1; border-color: var(--mul-color); color: var(--mul-color);
+}
+.tab-btn[data-tab="division"].active {
+  background: #fff3e0; border-color: var(--div-color); color: var(--div-color);
+}
+.tab-btn[data-tab="time"].active {
+  background: #f3e5f5; border-color: var(--time-color); color: var(--time-color);
+}
+
+/* محتوى التبويبات */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.4s ease;
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ==========================================================
-   4. FORMULAIRES ET INPUTS
-   ========================================================== */
+/* البطاقات التوضيحية داخل كل قسم */
+.explication {
+  background: #f8fafc;
+  border-right: 5px solid var(--primary-color);
+  padding: 15px;
+  margin-bottom: 25px;
+  font-size: 15px;
+  color: #334155;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+/* حقول الإدخال والتحكم */
 .input-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 15px;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
 }
 
 .input-group {
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .input-group label {
   font-weight: bold;
   color: #475569;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 input, select {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px;
-  font-size: 16px;
+  padding: 14px;
+  font-size: 18px;
   border: 2px solid #cbd5e1;
-  border-radius: 10px;
+  border-radius: 12px;
   outline: none;
+  transition: all 0.2s;
+  text-align: center;
   background: #f8fafc;
-  -webkit-appearance: none; /* Nettoie le style par défaut d'Android */
 }
 
 input:focus, select:focus {
   border-color: var(--primary-color);
   background: white;
+  box-shadow: 0 0 0 4px rgba(74, 21, 75, 0.15);
 }
 
-/* ==========================================================
-   5. RÉSULTATS & CARREAUX (TABLEAUX) SOUS L'AUTRE
-   ========================================================== */
-.result-section {
-  margin-top: 20px;
-  padding: 12px;
+/* الأزرار الملونة الجذابة */
+.btn-calc {
+  width: 100%;
+  padding: 15px;
+  color: white;
+  border: none;
   border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-calc:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-add { background: var(--add-color); }
+.btn-add:hover { background: #1976d2; }
+.btn-sub { background: var(--sub-color); }
+.btn-sub:hover { background: #c2185b; }
+.btn-mul { background: var(--mul-color); }
+.btn-mul:hover { background: #00897b; }
+.btn-div { background: var(--div-color); }
+.btn-div:hover { background: #fb8c00; }
+.btn-time { background: var(--time-color); }
+.btn-time:hover { background: #8e24aa; }
+
+/* لوحة عرض النتائج */
+.result-section {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 16px;
   background: #fafafa;
   border: 2px dashed #e2e8f0;
+  display: none;
 }
 
 .final-output {
-  font-size: 18px;
+  font-size: 26px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
   color: #1e293b;
 }
 
-/* Force les grilles et carreaux à s'aligner verticalement (تحت بعضهم) */
+/* جداول الحسابات والشبكات */
 .calc-table-wrapper {
   display: flex;
-  flex-direction: column; 
-  align-items: center;
-  gap: 15px; 
-  width: 100%;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 table {
   border-collapse: collapse;
-  margin: 5px auto;
-  direction: ltr;
+  margin: 10px auto;
+  direction: ltr; /* للحفاظ على تسلسل الحساب الرياضي من اليمين لليسار هندسياً */
 }
 
-/* Taille des carreaux optimisée pour les écrans tactiles */
 td {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   text-align: center;
-  font-size: 16px;
+  font-size: 22px;
+  font-weight: bold;
   border: 1px solid #cbd5e1;
   font-family: 'Courier New', Courier, monospace;
   position: relative;
@@ -265,153 +354,215 @@ td {
 
 .colonne-signe, td:first-child {
   border: none !important;
-  width: 32px;
-  font-size: 20px;
+  width: 45px;
+  font-size: 26px;
+  text-align: center;
 }
 
 .retenue {
   color: #ef4444;
-  font-size: 11px;
-  height: 18px;
+  font-size: 15px;
+  font-weight: normal;
+  height: 25px;
+  border: 1px solid #cbd5e1;
 }
 
-.ligne { border-bottom: 3px solid #1e293b !important; }
-.separator { width: 8px; color: #ef4444; }
+.ligne {
+  border-bottom: 3px solid #1e293b !important;
+}
+
+.separator {
+  width: 15px;
+  color: #ef4444;
+  border: 1px solid #cbd5e1;
+}
 
 td.virgule-apres::after {
   content: ",";
   position: absolute;
-  right: -3px;
+  right: -6px;
   bottom: 0px;
   color: #ef4444;
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-/* Structure verticale pour la division (Potence) */
+/* شبكة تفاصيل عملية القسمة (Potence) */
 .potence-container {
   display: flex;
-  flex-direction: column; 
-  align-items: center;
+  justify-content: center;
   font-family: "Courier New", Courier, monospace;
   direction: ltr;
-  width: 100%;
+}
+.grille-gauche {
+  border-collapse: collapse;
+}
+.grille-droite {
+  border-collapse: collapse;
+  border-left: 3px solid black;
+  margin-left: -1px;
+}
+.ligne-potence {
+  border-bottom: 3px solid black !important;
+}
+.trait-soustraction {
+  border-bottom: 2px solid black !important;
 }
 
-.grille-gauche { border-collapse: collapse; }
-.grille-droite { border-collapse: collapse; border-left: 3px solid black; margin-left: -1px; }
-.ligne-potence { border-bottom: 3px solid black !important; }
-.trait-soustraction { border-bottom: 2px solid black !important; }
-
+/* تنسيق الشرح بالتفصيل */
 .steps {
-  font-size: 13px;
+  font-size: 16px;
   color: #475569;
-  line-height: 1.5;
+  line-height: 1.8;
   border-top: 1px solid #e2e8f0;
-  padding-top: 12px;
+  padding-top: 20px;
 }
 
-/* Calculateur de Temps vertical */
+/* حاسبة الوقت */
 .table-vertical {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  border-collapse: collapse;
 }
-.table-vertical td { padding: 4px 8px; }
-.cell-op { color: #ef4444; padding-right: 8px !important; }
-.trait-calcul { border-bottom: 3px solid #1e293b !important; }
-.retenu-text { font-size: 11px; }
-
-/* ==========================================================
-   6. GRAPHISMES ET ANIMATIONS DE FOND (ICÔNES)
-   ========================================================== */
-.math-animation-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
+.table-vertical td {
+  padding: 8px 15px;
+  text-align: center;
 }
-
-.floating-sign {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(2px 2px 0px #4180e7);
-  animation: floatAround 12s infinite ease-in-out;
+.cell-op {
+  color: #ef4444;
+  text-align: left !important;
+  padding-right: 20px !important;
 }
+.trait-calcul {
+  border-bottom: 3px solid #1e293b !important;
+}
+.retenu-text {
+  font-size: 14px;
+  color: #ef4444;
+  font-weight: normal;
+}
+/* ======================================================
+   RESPONSIVE DESIGN (TÉLÉPHONES ET TABLETTES)
+   ====================================================== */
 
-.floating-sign path { stroke: currentcolor; stroke-width: 14px; }
-.floating-sign circle { fill: currentcolor; }
+/* 1. TABLETTES (Écrans inférieurs à 1024px) */
+@media (max-width: 1024px) {
+    body {
+        padding: 15px;
+    }
 
-.plus { color: #c300ff; top: 12%; left: 5%; animation-duration: 14s; }
-.minus { color: #00ff5e; top: 88%; left: 5%; animation-duration: 10s; animation-delay: 2s; }
-.multiply { color: #ff6a00; top: 18%; right: 5%; animation-duration: 16s; animation-delay: 1s; }
-.divide { color: #09ffff; top: 82%; right: 5%; animation-duration: 12s; animation-delay: 3s; }
-.equals { color: #ffc401; top: 50%; left: 85%; width: 30px; height: 30px; animation-duration: 18s; }
-.time-icon { color: #ea0808; top: 5%; left: 45%; width: 25px; height: 30px; animation-duration: 18s; }
-.time-icon2 { color: #ea0808; top: 92%; left: 45%; width: 25px; height: 30px; animation-duration: 18s; }
+    .content-container {
+        max-width: 100%;
+        padding: 20px;
+    }
 
-@keyframes floatAround {
-  0% { transform: translateY(0px) rotate(0deg) scale(1); }
-  25% { transform: translateY(-15px) translateX(8px) rotate(8deg) scale(1.03); }
-  50% { transform: translateY(8px) translateX(-8px) rotate(-12deg) scale(0.97); }
-  75% { transform: translateY(-10px) translateX(-4px) rotate(5deg) scale(1.01); }
-  100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    .tabs-container {
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+    }
 }
 
-/* ==========================================================
-   7. ADAPTATION TABLETTES & PC (ÉCRANS LARGES > 600px)
-   ========================================================== */
-@media (min-width: 601px) {
-  body { padding: 20px; }
-  .container { padding: 30px; margin-top: 10px; border-radius: 24px; }
-  .header h1 { font-size: 32px; }
-  .header p { font-size: 16px; }
-  
-  /* Les boutons reprennent une seule ligne propre */
-  .tabs-nav { 
-    grid-template-columns: repeat(5, 1fr); 
-    gap: 10px; 
-  }
-  .tab-btn[data-tab="addition"],
-  .tab-btn[data-tab="subtraction"],
-  .tab-btn[data-tab="multiplication"],
-  .tab-btn[data-tab="division"],
-  .tab-btn[data-tab="time"] {
-    grid-column: auto;
-    grid-row: auto;
-  }
-  .tab-btn { padding: 15px 5px; font-size: 15px; border-radius: 16px; }
-  .tab-btn svg { width: 36px; height: 36px; }
-  
-  /* Le bouton de calcul quitte la grille pour prendre toute la largeur en dessous */
-  .btn-calc {
-    grid-column: auto;
-    grid-row: auto;
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 12px;
-    margin-top: 10px;
-  }
-  
-  .explication { font-size: 15px; padding: 15px; }
-  .input-row { flex-direction: row; gap: 15px; }
-  
-  /* Les carreaux se remettent à l'horizontale sur grand écran */
-  .calc-table-wrapper { flex-direction: row; justify-content: center; }
-  .potence-container { flex-direction: row; justify-content: center; }
-  
-  td { width: 42px; height: 42px; font-size: 22px; }
-  .colonne-signe, td:first-child { width: 45px; font-size: 26px; }
-  .table-vertical { font-size: 24px; }
-  
-  .floating-sign { width: 80px; height: 80px; }
-  .equals { width: 60px; height: 60px; }
-  .time-icon, .time-icon2 { width: 50px; height: 60px; }
+/* 2. PETITES TABLETTES & GRANDES PHABLETTES (Écrans inférieurs à 768px) */
+@media (max-width: 768px) {
+    .main-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .inputs-group {
+        gap: 15px;
+    }
+
+    .input-field input, .input-field select {
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    /* Permet aux grilles d'opérations trop larges de défiler horizontalement sans casser l'écran */
+    .table-scroll {
+        overflow-x: auto;
+        display: block;
+        width: 100%;
+        -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+    }
+
+    .grille-calcul, .potence-container {
+        font-size: 1.4rem; /* Réduction légère de la taille des chiffres */
+    }
+
+    .grille-gauche td, .grille-droite td {
+        min-width: 30px;
+        height: 38px;
+    }
+}
+
+/* 3. SMARTPHONES (Écrans inférieurs à 480px) */
+@media (max-width: 480px) {
+    .main-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .main-header p {
+        font-size: 0.85rem;
+    }
+
+    /* Les onglets s'empilent ou s'alignent plus proprement */
+    .tabs-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 boutons par ligne */
+        gap: 6px;
+    }
+
+    .tab-btn {
+        width: 100%;
+        padding: 10px 5px;
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    /* Pour l'onglet "Temps", force l'empilement vertical de l'opérateur et des inputs */
+    .inputs-group.flex-time {
+        flex-direction: column;
+    }
+
+    .inputs-group {
+        flex-direction: column; /* Force les inputs l'un sous l'autre */
+        gap: 12px;
+    }
+
+    .op-field {
+        flex: none;
+        width: 100%;
+    }
+
+    .explanation {
+        font-size: 0.85rem;
+        padding: 12px;
+    }
+
+    .btn-calcul {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    /* Optimisation maximale de l'espace pour les grilles mathématiques */
+    .grille-calcul, .potence-container {
+        font-size: 1.2rem; 
+    }
+
+    .grille-calcul td {
+        min-width: 25px;
+        height: 35px;
+        padding: 2px 4px;
+    }
+
+    .grille-gauche td, .grille-droite td {
+        min-width: 25px;
+        height: 35px;
+        padding: 2px 5px;
+    }
 }
