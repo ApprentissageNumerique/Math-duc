@@ -1,3 +1,35 @@
+// دالة لمنع الحروف وقبول الأرقام والفواصل فقط (للعمليات الحسابية)
+function validateDecimalInput(event) {
+  // السماح بالأرقام، النقطة، والفاصلة فقط
+  event.target.value = event.target.value.replace(/[^0-9,.]/g, '');
+}
+
+// دالة لمنع الحروف وقبول الأرقام والنقطتين فقط (لحاسبة الوقت)
+function validateTimeInput(event) {
+  // السماح بالأرقام والنقطتين الرأسيتين فقط
+  event.target.value = event.target.value.replace(/[^0-9:]/g, '');
+}
+
+// ربط الرقابة بجميع الحقول فور تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  // حقول الأعداد الحسابية
+  const decimalInputs = ['add_n1', 'add_n2', 'sub_n1', 'sub_n2', 'mul_n1', 'mul_n2', 'div_n1', 'div_n2'];
+  decimalInputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', validateDecimalInput);
+    }
+  });
+
+  // حقول الوقت
+  const timeInputs = ['time1', 'time2'];
+  timeInputs.forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.addEventListener('input', validateTimeInput);
+    }
+  });
+});
 // --- 1. إدارة التنقل بين التبويبات (Tabs Layout) ---
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabContents = document.querySelectorAll(".tab-content");
