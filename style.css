@@ -442,127 +442,73 @@ td.virgule-apres::after {
   color: #ef4444;
   font-weight: normal;
 }
-/* ======================================================
-   RESPONSIVE DESIGN (TÉLÉPHONES ET TABLETTES)
-   ====================================================== */
-
-/* 1. TABLETTES (Écrans inférieurs à 1024px) */
-@media (max-width: 1024px) {
-    body {
-        padding: 15px;
-    }
-
-    .content-container {
-        max-width: 100%;
-        padding: 20px;
-    }
-
-    .tabs-container {
-        gap: 8px;
-    }
-
-    .tab-btn {
-        padding: 8px 16px;
-        font-size: 0.95rem;
-    }
-}
-
-/* 2. PETITES TABLETTES & GRANDES PHABLETTES (Écrans inférieurs à 768px) */
+/* تنسيقات خاصة بالهواتف والأجهزة اللوحية */
 @media (max-width: 768px) {
-    .main-header h1 {
-        font-size: 1.7rem;
-    }
+  .container {
+    padding: 15px;
+    border-radius: 16px;
+  }
 
-    .inputs-group {
-        gap: 15px;
-    }
+  .header h1 {
+    font-size: 22px;
+  }
 
-    .input-field input, .input-field select {
-        padding: 10px;
-        font-size: 1rem;
-    }
+  .header p {
+    font-size: 14px;
+  }
 
-    /* Permet aux grilles d'opérations trop larges de défiler horizontalement sans casser l'écran */
-    .table-scroll {
-        overflow-x: auto;
-        display: block;
-        width: 100%;
-        -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
-    }
+  /* تقسيم التبويبات إلى 3 أعمدة */
+  .tabs-nav {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
 
-    .grille-calcul, .potence-container {
-        font-size: 1.4rem; /* Réduction légère de la taille des chiffres */
-    }
+  /* جعل أزرار التبويبات أصغر ومناسبة للمس */
+  .tab-btn {
+    padding: 10px 4px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
 
-    .grille-gauche td, .grille-droite td {
-        min-width: 30px;
-        height: 38px;
-    }
-}
+  .tab-btn svg {
+    width: 28px;
+    height: 28px;
+  }
 
-/* 3. SMARTPHONES (Écrans inférieurs à 480px) */
-@media (max-width: 480px) {
-    .main-header h1 {
-        font-size: 1.4rem;
-    }
+  /* لجعل زري القسمة والوقت يتوسطان السطر الثاني بشكل متناسق (اختياري) */
+  .tab-btn[data-tab="division"] {
+    grid-column: 1 / span 1;
+  }
+  .tab-btn[data-tab="time"] {
+    grid-column: 2 / span 1;
+  }
 
-    .main-header p {
-        font-size: 0.85rem;
-    }
+  /* تحويل حقول الإدخال لتصبح تحت بعضها في الشاشات الصغيرة */
+  .input-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
 
-    /* Les onglets s'empilent ou s'alignent plus proprement */
-    .tabs-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr); /* 2 boutons par ligne */
-        gap: 6px;
-    }
+  .input-group {
+    max-width: 100% !important; /* إلغاء التحديد الخاص بالعملية في حاسبة الوقت */
+  }
 
-    .tab-btn {
-        width: 100%;
-        padding: 10px 5px;
-        font-size: 0.85rem;
-        text-align: center;
-    }
+  input, select {
+    padding: 12px;
+    font-size: 16px;
+  }
 
-    /* Pour l'onglet "Temps", force l'empilement vertical de l'opérateur et des inputs */
-    .inputs-group.flex-time {
-        flex-direction: column;
-    }
+  .btn-calc {
+    padding: 12px;
+    font-size: 16px;
+  }
 
-    .inputs-group {
-        flex-direction: column; /* Force les inputs l'un sous l'autre */
-        gap: 12px;
-    }
-
-    .op-field {
-        flex: none;
-        width: 100%;
-    }
-
-    .explanation {
-        font-size: 0.85rem;
-        padding: 12px;
-    }
-
-    .btn-calcul {
-        padding: 12px;
-        font-size: 1rem;
-    }
-
-    /* Optimisation maximale de l'espace pour les grilles mathématiques */
-    .grille-calcul, .potence-container {
-        font-size: 1.2rem; 
-    }
-
-    .grille-calcul td {
-        min-width: 25px;
-        height: 35px;
-        padding: 2px 4px;
-    }
-
-    .grille-gauche td, .grille-droite td {
-        min-width: 25px;
-        height: 35px;
-        padding: 2px 5px;
-    }
+  /* تحسين عرض الجداول الطويلة لتتحرك أفقياً إذا لزم الأمر ولا تخرج عن الشاشة */
+  .calc-table-wrapper, .potence-container {
+    overflow-x: auto;
+    padding: 10px 0;
+    justify-content: flex-start;
+  }
 }
