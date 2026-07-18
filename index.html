@@ -1,27 +1,12 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- 1. Le Titre du site optimisé pour Google (Cible les recherches de 6ème) -->
-    <title>رياضيات السنة السادسة ابتدائي - تمارين ودروس المخطط 1 | الثلاثي الأول</title>
-    
-    <!-- 2. La Description lue par les parents et élèves sur Google -->
-    <meta name="description" content="حاسبة تعليمية تفاعلية مخصصة لتلاميذ السنة السادسة ابتدائي في تونس. تدرب على عمليات الجمع، الطرح، الضرب، القسمة الإقليدية وحساب الوقت الخاصة بالمخطط 1." />
-    
-    <!-- 3. Les Mots-clés stratégiques pour les robots d'indexation -->
-    <meta name="keywords" content="السنة السادسة ابتدائي, رياضيات, المخطط 1, module 1, الثلاثي الأول, تمارين رياضيات, قسمة إقليدية, حساب الوقت, تونس, 6ème année" />
-    
-    <!-- 4. Balises Open Graph pour que le site s'affiche joliment partagé sur Facebook / Messenger -->
-    <meta property="og:title" content="رياضيات السنة السادسة ابتدائي - المخطط 1" />
-    <meta property="og:description" content="تطبيق تفاعلي لشرح آليات الحساب (جمع، طرح، ضرب، قسمة، ووقت) لتلاميذ السادسة أساسي." />
-    <meta property="og:type" content="website" />
-
+    <title>الحاسبة التعليمية الشاملة</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-<div class="language-selector"> <label for="langSelect"> 🌐 </label> <select id="langSelect" onchange="changeLanguage(this.value)"> <option value="ar"> العربية </option> <option value="fr"> Français </option> <option value="en"> English </option> <option value="bg"> Български </option> </select> </div>
     <div class="math-animation-container">
   <!-- رمز الجمع -->
   <svg class="floating-sign plus" viewBox="0 0 100 100">
@@ -64,8 +49,8 @@
 </div>
     <div class="container">
       <div class="header">
-        <h1 data-i18n="pageH1">منصة العمليات الحسابية التفاعلية</h1>
-        <p data-i18n="pageSubtitle">اختر العملية الحسابية التي تريد تطبيقها والتعلم منها خطوة بخطوة</p>
+        <h1>منصة العمليات الحسابية التفاعلية</h1>
+        <p>اختر العملية الحسابية التي تريد تطبيقها والتعلم منها خطوة بخطوة</p>
       </div>
 
       <!-- التبويبات العلوية المحدثة -->
@@ -84,7 +69,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <span data-i18n="tabAdd">الجمع</span>
+          الجمع العمودي
         </button>
 
         <button class="tab-btn" data-tab="subtraction">
@@ -101,7 +86,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <span data-i18n="tabSub">الطرح</span>
+          الطرح العمودي
         </button>
 
         <button class="tab-btn" data-tab="multiplication">
@@ -118,7 +103,7 @@
               stroke-linecap="round"
             />
           </svg>
-          <span data-i18n="tabMul">الضرب</span>
+          الضرب العمودي
         </button>
 
         <button class="tab-btn" data-tab="division">
@@ -137,7 +122,7 @@
             <circle cx="32" cy="18" r="5" fill="#ff9100" />
             <circle cx="32" cy="46" r="5" fill="#ff9100" />
           </svg>
-          <span data-i18n="tabDiv">القسمة العشرية</span>
+          القسمة العشرية
         </button>
 
         <button class="tab-btn" data-tab="time">
@@ -156,40 +141,38 @@
               stroke-linejoin="round"
             />
           </svg>
-          <span data-i18n="tabTime">حساب الوقت</span>
+          حساب الوقت
         </button>
       </div>
 
       <!-- ================= قسم الجمع العمودي ================= -->
       <div class="tab-content active" id="addition">
         <div class="explication" style="border-right-color: var(--add-color)">
-          <strong data-i18n="explAddStrong">طريقة الجمع:</strong><span data-i18n="explAddText"> رتب الأعداد عمودياً بحيث تكون الفواصل
+          <strong>طريقة الجمع:</strong> رتب الأعداد عمودياً بحيث تكون الفواصل
           تحت بعضها والآحاد تحت الآحاد، ثم اجمع من اليمين إلى اليسار مع ترحيل
-          الاحتفاظ الفائض للخانة التالية.</span>
+          الاحتفاظ الفائض للخانة التالية.
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label data-i18n="labelAddN1">العدد الأول</label>
+            <label>العدد الأول</label>
             <input
               type="text"
               id="add_n1"
-              data-i18n-placeholder="phAddN1"
               placeholder="مثال: 12,5"
               value="12,5"
             />
           </div>
           <div class="input-group">
-            <label data-i18n="labelAddN2">العدد الثاني</label>
+            <label>العدد الثاني</label>
             <input
               type="text"
               id="add_n2"
-              data-i18n-placeholder="phAddN2"
               placeholder="مثال: 3,75"
               value="3,75"
             />
           </div>
         </div>
-        <button class="btn-calc btn-add" onclick="runAddition()" data-i18n="btnAdd">
+        <button class="btn-calc btn-add" onclick="runAddition()">
           احسب المجموع
         </button>
 
@@ -206,33 +189,31 @@
       <!-- ================= قسم الطرح العمودي (المضاف) ================= -->
       <div class="tab-content" id="subtraction">
         <div class="explication" style="border-right-color: var(--sub-color)">
-          <strong data-i18n="explSubStrong">طريقة الطرح:</strong><span data-i18n="explSubText"> رتب الأعداد عمودياً (الفواصل فوق بعضها).
+          <strong>طريقة الطرح:</strong> رتب الأعداد عمودياً (الفواصل فوق بعضها).
           إذا كان الرقم العلوي أصغر من السفلي، نستعير "1" من الخانة التالية جهة
-          اليسار ونضيف "10" للخانة الحالية.</span>
+          اليسار ونضيف "10" للخانة الحالية.
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label data-i18n="labelSubN1">العدد الأول (الأكبر)</label>
+            <label>العدد الأول (الأكبر)</label>
             <input
               type="text"
               id="sub_n1"
-              data-i18n-placeholder="phSubN1"
               placeholder="مثال: 15,2"
               value="15,2"
             />
           </div>
           <div class="input-group">
-            <label data-i18n="labelSubN2">العدد الثاني (الأصغر)</label>
+            <label>العدد الثاني (الأصغر)</label>
             <input
               type="text"
               id="sub_n2"
-              data-i18n-placeholder="phSubN2"
               placeholder="مثال: 6,75"
               value="6,75"
             />
           </div>
         </div>
-        <button class="btn-calc btn-sub" onclick="runSubtraction()" data-i18n="btnSub">
+        <button class="btn-calc btn-sub" onclick="runSubtraction()">
           احسب الفرق
         </button>
 
@@ -249,33 +230,31 @@
       <!-- ================= قسم الضرب العمودي ================= -->
       <div class="tab-content" id="multiplication">
         <div class="explication" style="border-right-color: var(--mul-color)">
-          <strong data-i18n="explMulStrong">طريقة الضرب:</strong><span data-i18n="explMulText"> أنجز عملية الضرب دون اعتبار للفاصلة، ثم
+          <strong>طريقة الضرب:</strong> أنجز عملية الضرب دون اعتبار للفاصلة، ثم
           في الناتج النهائي ضع الفاصلة بحيث يكون عدد أرقامها مساوياً لمجموع عدد
-          الأرقام بعد الفاصلة في العددين المضروبين.</span>
+          الأرقام بعد الفاصلة في العددين المضروبين.
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label data-i18n="labelMulN1">المضروب</label>
+            <label>المضروب</label>
             <input
               type="text"
               id="mul_n1"
-              data-i18n-placeholder="phMulN1"
               placeholder="مثال: 153,2"
               value="153,2"
             />
           </div>
           <div class="input-group">
-            <label data-i18n="labelMulN2">المضروب فيه</label>
+            <label>المضروب فيه</label>
             <input
               type="text"
               id="mul_n2"
-              data-i18n-placeholder="phMulN2"
               placeholder="مثال: 1,2"
               value="1,2"
             />
           </div>
         </div>
-        <button class="btn-calc btn-mul" onclick="runMultiplication()" data-i18n="btnMul">
+        <button class="btn-calc btn-mul" onclick="runMultiplication()">
           احسب حاصل الضرب
         </button>
 
@@ -292,33 +271,31 @@
       <!-- ================= قسم القسمة العشرية ================= -->
       <div class="tab-content" id="division">
         <div class="explication" style="border-right-color: var(--div-color)">
-          <strong data-i18n="explDivStrong">طريقة القسمة:</strong><span data-i18n="explDivText"> إذا كان المقسوم عليه عشرياً، نضربه
+          <strong>طريقة القسمة:</strong> إذا كان المقسوم عليه عشرياً، نضربه
           والمقسوم معاً في (10، 100، أو 1000...) للتخلص من الفاصلة في المقسوم
-          عليه أولاً، ثم ننجز عملية القسمة بالشبكة كالمعتاد.</span>
+          عليه أولاً، ثم ننجز عملية القسمة بالشبكة كالمعتاد.
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label data-i18n="labelDivN1">المقسوم</label>
+            <label>المقسوم</label>
             <input
               type="text"
               id="div_n1"
-              data-i18n-placeholder="phDivN1"
               placeholder="مثال: 12,25"
               value="12,25"
             />
           </div>
           <div class="input-group">
-            <label data-i18n="labelDivN2">المقسوم عليه</label>
+            <label>المقسوم عليه</label>
             <input
               type="text"
               id="div_n2"
-              data-i18n-placeholder="phDivN2"
               placeholder="مثال: 2,5"
               value="2,5"
             />
           </div>
         </div>
-        <button class="btn-calc btn-div" onclick="runDivision()" data-i18n="btnDiv">
+        <button class="btn-calc btn-div" onclick="runDivision()">
           احسب عملية القسمة
         </button>
 
@@ -335,17 +312,17 @@
       <!-- ================= قسم حساب الوقت والزمن ================= -->
       <div class="tab-content" id="time">
         <div class="explication" style="border-right-color: var(--time-color)">
-          <strong data-i18n="explTimeStrong">طريقة حساب الزمن:</strong><span data-i18n="explTimeText"> نجمع أو نطرح الساعات تحت الساعات
+          <strong>طريقة حساب الزمن:</strong> نجمع أو نطرح الساعات تحت الساعات
           والدقائق تحت الدقائق بشكل عمودي مستقل، مع مراعاة التحويل عند الضرورة
-          (1 ساعة = 60 دقيقة).</span>
+          (1 ساعة = 60 دقيقة).
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label data-i18n="labelTime1">الوقت الأول (ساعة:دقيقة)</label>
+            <label>الوقت الأول (ساعة:دقيقة)</label>
             <input type="text" id="time1" placeholder="09:40" value="09:40" />
           </div>
           <div class="input-group" style="max-width: 110px">
-            <label data-i18n="labelOperator">العملية</label>
+            <label>العملية</label>
             <select id="time_operator" onchange="toggleTimeInputs()">
               <option value="+">+</option>
               <option value="-">-</option>
@@ -353,11 +330,11 @@
             </select>
           </div>
           <div class="input-group">
-            <label id="labelTime2" data-i18n="labelTime2">الوقت الثاني (ساعة:دقيقة)</label>
+            <label id="labelTime2">الوقت الثاني (ساعة:دقيقة)</label>
             <input type="text" id="time2" placeholder="01:45" value="01:45" />
           </div>
         </div>
-        <button class="btn-calc btn-time" onclick="runTimeCalcul()" data-i18n="btnTime">
+        <button class="btn-calc btn-time" onclick="runTimeCalcul()">
           احسب ناتج الوقت
         </button>
 
@@ -372,7 +349,7 @@
         </div>
       </div>
     </div>
-    <a href="https://info.flagcounter.com/QykX"><img src="https://s01.flagcounter.com/count2/QykX/bg_C1FFA6/txt_000000/border_181ECC/columns_2/maxflags_5/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
+<a href="https://info.flagcounter.com/QykX"><img src="https://s01.flagcounter.com/count2/QykX/bg_C1FFA6/txt_000000/border_181ECC/columns_2/maxflags_5/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
     <script src="script.js"></script>
   </body>
 </html>
