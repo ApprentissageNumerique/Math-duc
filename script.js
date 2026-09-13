@@ -269,161 +269,410 @@ function runMultiplication() {
   let n1raw = document.getElementById("mul_n1").value.trim().replace(",", ".");
   let n2raw = document.getElementById("mul_n2").value.trim().replace(",", ".");
 
-  if (n1raw == "" || n2raw == "") {
+  if (n1raw === "" || n2raw === "") {
     alert("الرجاء إدخال رقمين");
     return;
   }
 
+  // Nettoyage
   n1raw = n1raw.replace(/[^0-9.]/g, "");
   n2raw = n2raw.replace(/[^0-9.]/g, "");
 
+  // Vérification
+  if ((n1raw.match(/\./g) || []).length > 1 ||
+      (n2raw.match(/\./g) || []).length > 1) {
+    alert("رقم غير صحيح");
+    return;
+  }
+
+  // Nombre de chiffres après la virgule
   let dec1 = n1raw.includes(".") ? n1raw.split(".")[1].length : 0;
   let dec2 = n2raw.includes(".") ? n2raw.split(".")[1].length : 0;
+
   let totalDec = dec1 + dec2;
 
+  // Suppression des virgules pour faire la multiplication entière
   let val1Str = n1raw.replace(".", "");
   let val2Str = n2raw.replace(".", "");
 
+  // Évite une chaîne vide
+  if (val1Str === "") val1Str = "0";
+  if (val2Str === "") val2Str = "0";
+
   let digits1 = val1Str.split("");
   let digits2 = val2Str.split("");
+
+  // ==========================================================
+  // CALCUL DES LIGNES INTERMÉDIAIRES
+  // ==========================================================
 
   let lignesIntermediaires = [];
   let retenuesLignes = [];
 
   for (let j = digits2.length - 1; j >= 0; j--) {
+
     let multiplicateur = Number(digits2[j]);
+
     let ligneResultat = [];
     let ligneRetenues = [];
+
+    // Une case par chiffre du multiplicande
+    for (let i = 0; i < digits1.length; i++) {
+      ligneResultat.push("");
+      ligneRetenues.push("");
+    }
+
     let retenue = 0;
 
-    let decalage = digits2.length - 1 - j;
-    for (let d = 0; d < decalage; d++) {
-      ligneResultat.unshift("0");
-      ligneRetenues.unshift("");
+    for (let i = digits1.length - 1; i >= 0; i--) {
+
+      let chiffre = Number(digits1[i]);
+
+      let produit = chiffre * multiplicateur + retenue;
+
+      let chiffreResultat = produit % 10;
+
+      let nouvelleRetenue = Math.floor(produit / 10);
+
+      // Chiffre obtenu
+      ligneResultat[i] = chiffreResultat;
+
+      /*
+       * IMPORTANT :
+       * La retenue doit être placée AU-DESSUS DU CHIFFRE SUIVANT
+       * donc à gauche du chiffre actuel.
+       */
+      if (i > 0 && nouvelleRetenue > 0) {
+        ligneRetenues[i - 1] = nouvelleRetenue;
+      }
+
+      retenue = nouvelleRetenue;
     }
 
-    for (let i = digits1.length - 1; i >= 0; i--) {
-      let produit = Number(digits1[i]) * multiplicateur + retenue;
-      ligneResultat.unshift(produit % 10);
-      retenue = Math.floor(produit / 10);
-      ligneRetenues.unshift(retenue > 0 ? retenue : "");
-    }
+    // Si une retenue reste à gauche
     if (retenue > 0) {
       ligneResultat.unshift(retenue);
       ligneRetenues.unshift("");
+    }
+
+    // ========================================================
+    // DÉCALAGE SELON LA POSITION DU MULTIPLICATEUR
+    // ========================================================
+
+    let decalage = digits2.length - 1 - j;
+
+    /*
+     * Pour les nombres décimaux, on ne met PAS de 0
+     * artificiel dans les lignes intermédiaires.
+     *
+     * Le décalage est géré par l'alignement des colonnes.
+     */
+    if (decalage > 0) {
+      for (let d = 0; d < decalage; d++) {
+        ligneResultat.push("");
+        ligneRetenues.push("");
+      }
     }
 
     lignesIntermediaires.push(ligneResultat);
     retenuesLignes.push(ligneRetenues);
   }
 
+  // ==========================================================
+  // RÉSULTAT FINAL
+  // ==========================================================
+
   let num1Brut = BigInt(val1Str);
   let num2Brut = BigInt(val2Str);
+
   let produitTotalStr = (num1Brut * num2Brut).toString();
+
+  // Ajouter des zéros si nécessaire pour les décimales
+  if (totalDec > 0) {
+    produitTotalStr = produitTotalStr.padStart(totalDec + 1, "0");
+  }
+
   let digitsResultat = produitTotalStr.split("");
 
+  // ==========================================================
+  // LARGEUR MAXIMALE
+  // ==========================================================
+
   let maxLen = digitsResultat.length;
+
   for (let ligne of lignesIntermediaires) {
     maxLen = Math.max(maxLen, ligne.length);
   }
-  maxLen = Math.max(maxLen, digits1.length, digits2.length);
+
+  maxLen = Math.max(
+    maxLen,
+    digits1.length,
+    digits2.length
+  );
+
+  // ==========================================================
+  // ALIGNEMENT
+  // ==========================================================
 
   let f1Aligned = val1Str.padStart(maxLen, " ");
   let f2Aligned = val2Str.padStart(maxLen, " ");
   let resAligned = produitTotalStr.padStart(maxLen, " ");
 
   let lignesAjustees = lignesIntermediaires.map((ligne) => {
-    let str = ligne.join("");
-    return str.padStart(maxLen, " ").split("");
+    let arr = new Array(maxLen).fill(" ");
+
+    let start = maxLen - ligne.length;
+
+    ligne.forEach((v, index) => {
+      if (v !== "" && v !== undefined) {
+        arr[start + index] = String(v);
+      }
+    });
+
+    return arr;
   });
 
-  let sepIndex = totalDec > 0 ? maxLen - totalDec : -1;
-  let sepIndexF1 = dec1 > 0 ? maxLen - dec1 : -1;
-  let sepIndexF2 = dec2 > 0 ? maxLen - dec2 : -1;
+  // ==========================================================
+  // POSITION DES VIRGULES
+  // ==========================================================
 
-  function buildRowMulti(arr, cellClass, signeToDisplay, virguleApresIndex) {
+  let sepIndex =
+    totalDec > 0
+      ? maxLen - totalDec
+      : -1;
+
+  let sepIndexF1 =
+    dec1 > 0
+      ? maxLen - dec1
+      : -1;
+
+  let sepIndexF2 =
+    dec2 > 0
+      ? maxLen - dec2
+      : -1;
+
+  // ==========================================================
+  // CONSTRUCTION D'UNE LIGNE
+  // ==========================================================
+
+  function buildRowMulti(
+    arr,
+    cellClass,
+    signeToDisplay,
+    virguleApresIndex
+  ) {
+
     let html = "<tr>";
+
     if (signeToDisplay) {
-      html += "<td class='colonne-signe'>" + signeToDisplay + "</td>";
+      html += "<td class='colonne-signe'>" +
+        signeToDisplay +
+        "</td>";
     } else {
       html += "<td></td>";
     }
+
     for (let i = 0; i < arr.length; i++) {
-      let content = arr[i] === " " ? "" : arr[i];
-      let classes = cellClass;
-      if (virguleApresIndex !== -1 && i === virguleApresIndex) {
-        classes += (classes ? " " : "") + "virgule-apres";
+
+      let content =
+        arr[i] === " " ||
+        arr[i] === "" ||
+        arr[i] === undefined
+          ? ""
+          : arr[i];
+
+      let classes = cellClass || "";
+
+      if (
+        virguleApresIndex !== -1 &&
+        i === virguleApresIndex
+      ) {
+        classes +=
+          (classes ? " " : "") +
+          "virgule-apres";
       }
-      html += "<td class='" + classes.trim() + "'>" + content + "</td>";
+
+      html +=
+        "<td class='" +
+        classes.trim() +
+        "'>" +
+        content +
+        "</td>";
     }
+
     html += "</tr>";
+
     return html;
   }
 
-  let html = "";
-  let toutesRetenues = new Array(maxLen).fill("");
+  // ==========================================================
+  // RETENUES
+  // ==========================================================
+
+  let toutesRetenues =
+    new Array(maxLen).fill("");
+
   retenuesLignes.forEach((retLigne) => {
+
+    let start =
+      maxLen - retLigne.length;
+
     for (let k = 0; k < retLigne.length; k++) {
-      if (retLigne[k] !== "") {
-        let index = maxLen - retLigne.length + k;
-        if (index >= 0) {
+
+      if (
+        retLigne[k] !== "" &&
+        retLigne[k] !== undefined
+      ) {
+
+        let index = start + k;
+
+        if (index >= 0 && index < maxLen) {
+
           toutesRetenues[index] +=
-            (toutesRetenues[index] ? "," : "") + retLigne[k];
+            (toutesRetenues[index] ? "," : "") +
+            retLigne[k];
         }
       }
     }
   });
 
-  html += buildRowMulti(toutesRetenues, "retenue", "", -1);
+  // ==========================================================
+  // AFFICHAGE
+  // ==========================================================
+
+  let html = "";
+
+  // Retenues
+  html += buildRowMulti(
+    toutesRetenues,
+    "retenue",
+    "",
+    -1
+  );
+
+  // Premier nombre
   html += buildRowMulti(
     f1Aligned.split(""),
     "",
     "",
-    sepIndexF1 !== -1 ? sepIndexF1 - 1 : -1,
+    sepIndexF1 !== -1
+      ? sepIndexF1 - 1
+      : -1
   );
+
+  // Deuxième nombre
   html += buildRowMulti(
     f2Aligned.split(""),
     "",
     "×",
-    sepIndexF2 !== -1 ? sepIndexF2 - 1 : -1,
+    sepIndexF2 !== -1
+      ? sepIndexF2 - 1
+      : -1
   );
-  html += buildRowMulti(new Array(maxLen).fill(""), "ligne", " ", -1);
+
+  // Ligne horizontale
+  html += buildRowMulti(
+    new Array(maxLen).fill(""),
+    "ligne",
+    " ",
+    -1
+  );
+
+  // ==========================================================
+  // LIGNES INTERMÉDIAIRES
+  // ==========================================================
 
   if (digits2.length > 1) {
-    lignesAjustees.forEach((ligne) => {
-      html += buildRowMulti(ligne, "", "", -1);
+
+    lignesAjustees.forEach((ligne, index) => {
+
+      /*
+       * Pour la deuxième ligne et suivantes,
+       * on ne met plus de 0 artificiel.
+       */
+
+      let virguleLigne = -1;
+
+      if (totalDec > 0) {
+        virguleLigne = maxLen - totalDec - 1;
+      }
+
+      html += buildRowMulti(
+        ligne,
+        "",
+        "",
+        virguleLigne
+      );
     });
-    html += buildRowMulti(new Array(maxLen).fill(""), "ligne", " ", -1);
+
+    // Ligne horizontale
+    html += buildRowMulti(
+      new Array(maxLen).fill(""),
+      "ligne",
+      " ",
+      -1
+    );
   }
 
+  // Résultat final
   html += buildRowMulti(
     resAligned.split(""),
     "",
     "",
-    sepIndex !== -1 ? sepIndex - 1 : -1,
+    sepIndex !== -1
+      ? sepIndex - 1
+      : -1
   );
 
-  document.getElementById("mul_table_body").innerHTML = html;
+  document.getElementById(
+    "mul_table_body"
+  ).innerHTML = html;
+
+  // ==========================================================
+  // RÉSULTAT AVEC VIRGULE
+  // ==========================================================
 
   let formattedRes = "";
+
   if (totalDec > 0) {
-    let integerPart = produitTotalStr.slice(0, -totalDec) || "0";
-    let decimalPart = produitTotalStr.slice(-totalDec);
-    decimalPart = decimalPart.replace(/0+$/, "");
-    formattedRes = decimalPart ? integerPart + "," + decimalPart : integerPart;
+
+    let integerPart =
+      produitTotalStr.slice(0, -totalDec) || "0";
+
+    let decimalPart =
+      produitTotalStr.slice(-totalDec);
+
+    // Supprimer les zéros inutiles à droite
+    decimalPart =
+      decimalPart.replace(/0+$/, "");
+
+    formattedRes =
+      decimalPart
+        ? integerPart + "," + decimalPart
+        : integerPart;
+
   } else {
+
     formattedRes = produitTotalStr;
   }
 
-  document.getElementById("mul_operation").innerHTML =
+  // ==========================================================
+  // OPÉRATION
+  // ==========================================================
+
+  document.getElementById(
+    "mul_operation"
+  ).innerHTML =
     n1raw.replace(".", ",") +
     " × " +
     n2raw.replace(".", ",") +
     " = " +
     formattedRes;
-  document.getElementById("mul_result_section").style.display = "block";
-}
 
+  document.getElementById(
+    "mul_result_section"
+  ).style.display = "block";
+}
 // --- 5. كود عملية القسمة الإقليدية والعشرية ---
 function runDivision() {
   let n1raw = document.getElementById("div_n1").value.trim().replace(",", ".");
